@@ -1,38 +1,38 @@
 <?php
 
-namespace App\Filament\Resources\Students\Tables;
+namespace App\Filament\Resources\Applicants\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class StudentsTable
+class ApplicantsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('applicant_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('matric_no')
+                TextColumn::make('full_name')
                     ->searchable(),
-                TextColumn::make('program_type')
+                TextColumn::make('identity_type')
                     ->badge(),
-                TextColumn::make('gender')
+                TextColumn::make('identity_no')
+                    ->searchable(),
+                TextColumn::make('program_applied')
                     ->badge(),
-                TextColumn::make('payment_method')
-                    ->badge(),
-                TextColumn::make('main_sv_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('co_sv_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('eng_test')
+                    ->searchable(),
                 TextColumn::make('status')
                     ->badge(),
+                TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -43,7 +43,7 @@ class StudentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -51,6 +51,8 @@ class StudentsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

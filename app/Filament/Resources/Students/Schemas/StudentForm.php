@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Students\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
 
 class StudentForm
 {
@@ -12,44 +12,31 @@ class StudentForm
     {
         return $schema
             ->components([
+                TextInput::make('applicant_id')
+                    ->required()
+                    ->numeric(),
                 TextInput::make('matric_no')
-                    ->label('No. Matrik')
-                    ->required()
-                    ->maxLength(255),
-                
-                TextInput::make('name')
-                    ->label('Nama Penuh')
-                    ->required()
-                    ->maxLength(255),
-                
-               
-                TextInput::make('email')
-                    ->label('Alamat E-mel')
-                    ->email() 
-                    ->required()
-                    ->maxLength(255),
-            
-                
-                Select::make('program')
-                    ->label('Program Pengajian')
-                    ->options([
-                        'Master' => 'Master',
-                        'PhD' => 'PhD',
-                    ])
                     ->required(),
-                
-                TextInput::make('faculty')
-                    ->label('Fakulti')
-                    ->required()
-                    ->maxLength(255),
-                
+                Select::make('program_type')
+                    ->options(['Master' => 'Master', 'PhD' => 'Ph d'])
+                    ->required(),
+                Select::make('gender')
+                    ->options(['Male' => 'Male', 'Female' => 'Female'])
+                    ->required(),
+                Select::make('payment_method')
+                    ->options(['Scholarship' => 'Scholarship', 'Self-funded' => 'Self funded', 'Other' => 'Other'])
+                    ->required(),
+                TextInput::make('main_sv_id')
+                    ->numeric(),
+                TextInput::make('co_sv_id')
+                    ->numeric(),
                 Select::make('status')
-                    ->label('Status')
                     ->options([
-                        'Active' => 'Aktif',
-                        'Graduated' => 'Telah Bergraduat',
-                        'Terminated' => 'Diberhentikan',
-                    ])
+            'Active' => 'Active',
+            'Completed' => 'Completed',
+            'Terminated' => 'Terminated',
+            'Deferred' => 'Deferred',
+        ])
                     ->default('Active')
                     ->required(),
             ]);

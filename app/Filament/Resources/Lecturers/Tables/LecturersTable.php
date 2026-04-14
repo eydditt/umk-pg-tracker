@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Students\Tables;
+namespace App\Filament\Resources\Lecturers\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -8,31 +8,16 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class StudentsTable
+class LecturersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('applicant_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('matric_no')
+                TextColumn::make('staff_no')
                     ->searchable(),
-                TextColumn::make('program_type')
-                    ->badge(),
-                TextColumn::make('gender')
-                    ->badge(),
-                TextColumn::make('payment_method')
-                    ->badge(),
-                TextColumn::make('main_sv_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('co_sv_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('status')
-                    ->badge(),
+                TextColumn::make('full_name')
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
