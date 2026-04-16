@@ -18,7 +18,9 @@ class LecturerResource extends Resource
 {
     protected static ?string $model = Lecturer::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
+
+    protected static ?string $navigationLabel = 'Lecturer';
 
     protected static ?string $recordTitleAttribute = 'full_name';
 
@@ -34,17 +36,15 @@ class LecturerResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListLecturers::route('/'),
+            'index'  => ListLecturers::route('/'),
             'create' => CreateLecturer::route('/create'),
-            'edit' => EditLecturer::route('/{record}/edit'),
+            'edit'   => EditLecturer::route('/{record}/edit'),
         ];
     }
 }

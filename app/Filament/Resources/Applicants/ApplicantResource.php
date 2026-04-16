@@ -20,7 +20,9 @@ class ApplicantResource extends Resource
 {
     protected static ?string $model = Applicant::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+
+    protected static ?string $navigationLabel = 'Applicant';
 
     protected static ?string $recordTitleAttribute = 'full_name';
 
@@ -36,17 +38,15 @@ class ApplicantResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListApplicants::route('/'),
+            'index'  => ListApplicants::route('/'),
             'create' => CreateApplicant::route('/create'),
-            'edit' => EditApplicant::route('/{record}/edit'),
+            'edit'   => EditApplicant::route('/{record}/edit'),
         ];
     }
 

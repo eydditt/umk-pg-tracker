@@ -15,21 +15,23 @@ class LecturersTable
         return $table
             ->columns([
                 TextColumn::make('staff_no')
-                    ->searchable(),
+                    ->label('Nombor Staf')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('full_name')
-                    ->searchable(),
+                    ->label('Nama Penuh')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('mainStudents_count')
+                    ->counts('mainStudents')
+                    ->label('Bilangan SV')
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->recordActions([
                 EditAction::make(),
             ])

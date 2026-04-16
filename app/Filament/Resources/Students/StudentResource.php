@@ -18,7 +18,9 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+
+    protected static ?string $navigationLabel = 'Student';
 
     protected static ?string $recordTitleAttribute = 'matric_no';
 
@@ -34,17 +36,15 @@ class StudentResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListStudents::route('/'),
+            'index'  => ListStudents::route('/'),
             'create' => CreateStudent::route('/create'),
-            'edit' => EditStudent::route('/{record}/edit'),
+            'edit'   => EditStudent::route('/{record}/edit'),
         ];
     }
 }
