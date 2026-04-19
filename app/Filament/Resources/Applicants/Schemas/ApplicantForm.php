@@ -14,30 +14,53 @@ class ApplicantForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Maklumat Pemohon')->schema([
-                TextInput::make('full_name')->required()->columnSpanFull(),
+            Section::make('Applicant Information')->schema([
+                TextInput::make('full_name')
+                    ->label('Full Name')
+                    ->required()
+                    ->columnSpanFull(),
                 Select::make('identity_type')
-                    ->options(['IC' => 'IC (Lokal)', 'Passport' => 'Passport (Antarabangsa)'])
+                    ->label('Identity Type')
+                    ->options(['IC' => 'IC (Local)', 'Passport' => 'Passport (International)'])
                     ->required(),
-                TextInput::make('identity_no')->required()->unique(ignoreRecord: true),
+                TextInput::make('identity_no')
+                    ->label('Identity Number')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->hint(fn($get) => $get('identity_type') === 'IC' ? '(without -)' : null)
+                    ->live(),
                 Select::make('program_applied')
-                    ->options(['Master' => 'Master', 'PhD' => 'PhD'])->required(),
-                Textarea::make('prev_edu')->label('Pendidikan Lepas')->columnSpanFull(),
-                TextInput::make('eng_test')->label('MUET/IELTS Score')->nullable(),
+                    ->label('Program Applied')
+                    ->options(['Master' => 'Master', 'PhD' => 'PhD'])
+                    ->required(),
+                Textarea::make('prev_edu')
+                    ->label('Previous Education')
+                    ->columnSpanFull(),
+                TextInput::make('eng_test')
+                    ->label('MUET/IELTS Score')
+                    ->nullable(),
                 Select::make('status')
-                    ->options(['Pending' => 'Pending', 'Approved' => 'Approved', 'Rejected' => 'Rejected'])
-                    ->default('Pending')->required(),
-            ])->columns(2),
+                    ->label('Status')
+                    ->options(['Pending' => 'Pending', 'Rejected' => 'Rejected'])
+                    ->default('Pending')
+                    ->required()
+                    ->disabled(fn($record) => $record && $record->status === 'Approved'),
+                    ])->columns(2),
 
-            Section::make('Dokumen Permohonan (Pautan Google Drive)')->schema([
+            Section::make('Application Documents (Google Drive Links)')->schema([
                 Repeater::make('application_docs_links')
                     ->label('')
                     ->schema([
-                        TextInput::make('label')->label('Label Dokumen')->required(),
-                        TextInput::make('url')->label('URL Google Drive')->url()->required(),
+                        TextInput::make('label')
+                            ->label('Document Label')
+                            ->required(),
+                        TextInput::make('url')
+                            ->label('Google Drive URL')
+                            ->url()
+                            ->required(),
                     ])
                     ->columns(2)
-                    ->addActionLabel('+ Tambah Dokumen')
+                    ->addActionLabel('+ Add Document')
                     ->defaultItems(0),
             ]),
         ]);

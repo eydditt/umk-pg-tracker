@@ -1,0 +1,46 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#9476
+    [34mall[39m: [
+      [34;4mApp\Models\Applicant[39;24m {#9475
+        [34mid[39m: [35m1[39m,
+        [34mfull_name[39m: [32m"[39m[32mkokiii[39m[32m"[39m,
+        [34midentity_no[39m: [32m"[39m[32m2323[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mRejected[39m[32m"[39m,
+        [34mdeleted_at[39m: [32m"[39m[32m2026-04-14 08:04:56[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9474
+        [34mid[39m: [35m2[39m,
+        [34mfull_name[39m: [32m"[39m[32mkokiii[39m[32m"[39m,
+        [34midentity_no[39m: [32m"[39m[32m877[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mRejected[39m[32m"[39m,
+        [34mdeleted_at[39m: [32m"[39m[32m2026-04-14 08:05:52[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9473
+        [34mid[39m: [35m3[39m,
+        [34mfull_name[39m: [32m"[39m[32mMuhammad Hakim Bin Roslan[39m[32m"[39m,
+        [34midentity_no[39m: [32m"[39m[32m960412-03-5678[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mRejected[39m[32m"[39m,
+        [34mdeleted_at[39m: [32m"[39m[32m2026-04-19 01:02:40[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9472
+        [34mid[39m: [35m4[39m,
+        [34mfull_name[39m: [32m"[39m[32mAisha Khan[39m[32m"[39m,
+        [34midentity_no[39m: [32m"[39m[32mP98765432[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mRejected[39m[32m"[39m,
+        [34mdeleted_at[39m: [32m"[39m[32m2026-04-19 01:16:06[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9471
+        [34mid[39m: [35m5[39m,
+        [34mfull_name[39m: [32m"[39m[32mSiti Nurhaliza Binti Ismail[39m[32m"[39m,
+        [34midentity_no[39m: [32m"[39m[32m990101-10-1234[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+        [34mdeleted_at[39m: [32m"[39m[32m2026-04-19 01:19:17[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9470
+        [34mid[39m: [35m6[39m,
+        [34mfull_name[39m: [32m"[39m[32mFatima Al-Masri[39m[32m"[39m,
+        [34midentity_no[39m: [32m"[39m[32mP87654321[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+        [34mdeleted_at[39m: [36mnull[39m,
+      },
+    ],
+  }

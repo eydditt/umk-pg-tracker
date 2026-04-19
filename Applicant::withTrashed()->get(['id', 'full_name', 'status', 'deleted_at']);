@@ -1,0 +1,28 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#9463
+    [34mall[39m: [
+      [34;4mApp\Models\Applicant[39;24m {#9464
+        [34mid[39m: [35m16[39m,
+        [34mfull_name[39m: [32m"[39m[32mMuhammad Hakim Bin Roslan[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mPending[39m[32m"[39m,
+        [34mdeleted_at[39m: [36mnull[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#8964
+        [34mid[39m: [35m17[39m,
+        [34mfull_name[39m: [32m"[39m[32mayuy[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mRejected[39m[32m"[39m,
+        [34mdeleted_at[39m: [36mnull[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9467
+        [34mid[39m: [35m18[39m,
+        [34mfull_name[39m: [32m"[39m[32mDaniel Lee[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mPending[39m[32m"[39m,
+        [34mdeleted_at[39m: [36mnull[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9459
+        [34mid[39m: [35m19[39m,
+        [34mfull_name[39m: [32m"[39m[32mNurul Huda Binti Omar[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+        [34mdeleted_at[39m: [36mnull[39m,
+      },
+    ],
+  }

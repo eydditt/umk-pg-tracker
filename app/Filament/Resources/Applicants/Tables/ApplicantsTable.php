@@ -5,10 +5,12 @@ namespace App\Filament\Resources\Applicants\Tables;
 use App\Models\Applicant;
 use App\Models\Student;
 use App\Models\StudentProgress;
-use Filament\Notifications\Notification;
-use Filament\Forms\Components\TextInput;
-use Filament\Actions\EditAction;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -19,40 +21,64 @@ class ApplicantsTable
     {
         return $table
             ->columns([
-                TextColumn::make('full_name')->searchable()->sortable(),
-                TextColumn::make('identity_no')->searchable(),
-                TextColumn::make('program_applied')->badge()
+                TextColumn::make('full_name')
+                    ->label('Full Name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('identity_no')
+                    ->label('Identity No')
+                    ->searchable(),
+                TextColumn::make('program_applied')
+                    ->label('Program')
+                    ->badge()
                     ->color(fn(string $state) => match($state) {
-                        'PhD'    => 'danger',
+                        'PhD'    => 'purple',
                         'Master' => 'info',
                         default  => 'gray',
                     }),
-                TextColumn::make('status')->badge()
+                TextColumn::make('status')
+                    ->badge()
                     ->color(fn(string $state) => match($state) {
                         'Pending'  => 'warning',
                         'Approved' => 'success',
                         'Rejected' => 'danger',
                         default    => 'gray',
                     }),
-                TextColumn::make('created_at')->date()->sortable(),
+                TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->date()
+                    ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(['Pending' => 'Pending', 'Approved' => 'Approved', 'Rejected' => 'Rejected']),
+                    SelectFilter::make('status')
+                        ->options([
+                            'Pending'  => 'Pending',
+                            'Approved' => 'Approved',
+                            'Rejected' => 'Rejected',
+                            
+                        ]),
+
+                    SelectFilter::make('program_applied')
+                    ->options([
+                        'Master' => 'Master',
+                        'PhD' => 'PhD',
+                    ]),
             ])
-            ->actions([
-                EditAction::make(),
+            ->recordActions([
+                EditAction::make()
+                    ->visible(fn(Applicant $record) => $record->status === 'Approved'),
+
                 Action::make('approve')
-                    ->label('Luluskan')
+                    ->label('Approve')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn(Applicant $record) => $record->status === 'Pending')
                     ->form([
                         TextInput::make('matric_no')
-                            ->label('Nombor Matrik Baharu')
+                            ->label('New Matric Number')
                             ->required()
-                            ->unique('students', 'matric_no')
-                            ->placeholder('Contoh: A23PM0001'),
+                            ->placeholder('e.g. A23PM0001')
+                            ->rules(['unique:students,matric_no']),
                     ])
                     ->action(function(Applicant $record, array $data) {
                         $record->update(['status' => 'Approved']);
@@ -69,20 +95,49 @@ class ApplicantsTable
                         StudentProgress::create(['student_id' => $student->id]);
 
                         Notification::make()
-                            ->title('Pemohon diluluskan! Rekod pelajar dicipta.')
+                            ->title('Applicant approved! Student record created.')
                             ->success()
                             ->send();
                     }),
+
                 Action::make('reject')
-                    ->label('Tolak')
+                    ->label('Reject')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->requiresConfirmation()
+                    ->modalHeading('Reject Applicant')
+                    ->modalDescription('This applicant will be marked as Rejected and kept in the system for record purposes.')
                     ->visible(fn(Applicant $record) => $record->status === 'Pending')
                     ->action(function(Applicant $record) {
                         $record->update(['status' => 'Rejected']);
-                        $record->delete();
+                        Notification::make()
+                        ->title('Applicant rejected.')
+                        ->warning()
+                        ->send();
                     }),
-            ]);
+
+               Action::make('delete')
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Permanently Delete Applicant')
+                    ->modalDescription('Are you sure? This record will be permanently removed from the system.')
+                    ->visible(fn(Applicant $record) => $record->status !== 'Approved')
+                    ->action(function(Applicant $record) {
+                        $record->forceDelete();
+
+                        Notification::make()
+                            ->title('Applicant permanently deleted.')
+                            ->warning()
+                            ->send();
+                    }),
+                            ])
+            ->toolbarActions([
+                    BulkActionGroup::make([
+                        DeleteBulkAction::make()
+                            ->action(fn($records) => $records->each->forceDelete()),
+                    ]),
+                ]);
     }
 }
