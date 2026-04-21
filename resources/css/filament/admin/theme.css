@@ -1,0 +1,35 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+.fi-sidebar {
+    background-color: #1a3a38 !important;
+    border-right: 1px solid #2A9D8F !important;
+}
+
+.fi-sidebar * {
+    color: #ffffff !important;
+}
+
+.fi-sidebar svg {
+    stroke: #ffffff !important;
+}
+
+.fi-sidebar-item-btn {
+    background-color: transparent !important;
+}
+
+.fi-sidebar-item-btn:hover {
+    background-color: #124d49 !important;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+    background-color: #1a6b65 !important;
+}
+
+.fi-topbar nav {
+    background-color: #1a3a38 !important;
+    border-bottom: 1px solid #2A9D8F !important;
+}
+
+.fi-brand-name {
+    color: #ffffff !important;
+}

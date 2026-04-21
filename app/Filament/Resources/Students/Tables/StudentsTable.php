@@ -16,11 +16,11 @@ class StudentsTable
         return $table
             ->columns([
                 TextColumn::make('matric_no')
-                    ->label('Nombor Matrik')
+                    ->label('Matric No')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('applicant.full_name')
-                    ->label('Nama Pelajar')
+                    ->label('Student Name')
                     ->searchable(),
                 TextColumn::make('program_type')
                     ->label('Program')
@@ -31,9 +31,9 @@ class StudentsTable
                         default  => 'gray',
                     }),
                 TextColumn::make('mainSupervisor.full_name')
-                    ->label('SV Utama')
-                    ->placeholder('Tiada SV')
-                    ->color('danger'),
+                    ->label('Main SV')
+                    ->placeholder('No SV Assigned')
+                    ->color('warning'),
                 TextColumn::make('progress.eng_test_status')
                     ->label('English')
                     ->badge()
@@ -50,6 +50,7 @@ class StudentsTable
             ])
             ->filters([
                 SelectFilter::make('program_type')
+                    ->label('Program')
                     ->options(['Master' => 'Master', 'PhD' => 'PhD']),
                 SelectFilter::make('status')
                     ->options([
@@ -64,7 +65,8 @@ class StudentsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(fn($records) => $records->each->forceDelete()),
                 ]),
             ]);
     }

@@ -11,13 +11,13 @@ class LecturerForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Maklumat Pensyarah')->schema([
+            Section::make('Lecturer Information')->schema([
                 TextInput::make('staff_no')
-                    ->label('Nombor Staf')
+                    ->label('Staff No')
                     ->required()
                     ->unique(ignoreRecord: true),
                 TextInput::make('full_name')
-                    ->label('Nama Penuh')
+                    ->label('Full Name')
                     ->required(),
             ])->columns(2),
         ]);

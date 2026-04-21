@@ -19,15 +19,25 @@ class ApplicantForm
                     ->label('Full Name')
                     ->required()
                     ->columnSpanFull(),
+                TextInput::make('email')
+                    ->label('Email Address')
+                    ->email()
+                    ->required()
+                    ->unique(ignoreRecord: true),
+                Select::make('gender')
+                    ->label('Gender')
+                    ->options(['Male' => 'Male', 'Female' => 'Female'])
+                    ->required(),
                 Select::make('identity_type')
                     ->label('Identity Type')
                     ->options(['IC' => 'IC (Local)', 'Passport' => 'Passport (International)'])
-                    ->required(),
+                    ->required()
+                    ->live(),
                 TextInput::make('identity_no')
                     ->label('Identity Number')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->hint(fn($get) => $get('identity_type') === 'IC' ? '(without -)' : null)
+                    ->hint(fn($get) => $get('identity_type') === 'IC' ? 'Format: 000000000000 (without -)' : null)
                     ->live(),
                 Select::make('program_applied')
                     ->label('Program Applied')
@@ -39,13 +49,21 @@ class ApplicantForm
                 TextInput::make('eng_test')
                     ->label('MUET/IELTS Score')
                     ->nullable(),
+                Select::make('eng_test_taken')
+                    ->label('English Test Status')
+                    ->options([
+                        'Taken'     => 'Taken',
+                        'Not Taken' => 'Not Taken',
+                    ])
+                    ->default('Not Taken')
+                    ->required(),
                 Select::make('status')
                     ->label('Status')
                     ->options(['Pending' => 'Pending', 'Rejected' => 'Rejected'])
                     ->default('Pending')
                     ->required()
                     ->disabled(fn($record) => $record && $record->status === 'Approved'),
-                    ])->columns(2),
+            ])->columns(2),
 
             Section::make('Application Documents (Google Drive Links)')->schema([
                 Repeater::make('application_docs_links')

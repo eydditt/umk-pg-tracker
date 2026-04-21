@@ -15,17 +15,16 @@ class LecturersTable
         return $table
             ->columns([
                 TextColumn::make('staff_no')
-                    ->label('Nombor Staf')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('full_name')
-                    ->label('Nama Penuh')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('mainStudents_count')
-                    ->counts('mainStudents')
-                    ->label('Bilangan SV')
-                    ->sortable(),
+                ->label('Staff No')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('full_name')
+                ->label('Full Name')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('mainStudents_count')
+                ->counts('mainStudents')
+                ->label('No. of Students'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -35,9 +34,28 @@ class LecturersTable
             ->recordActions([
                 EditAction::make(),
             ])
+           ->recordActions([
+                EditAction::make(),
+                \Filament\Actions\Action::make('delete')
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete Lecturer')
+                    ->modalDescription('Are you sure? This lecturer will be permanently deleted.')
+                    ->action(function($record) {
+                        $record->forceDelete();
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Lecturer permanently deleted.')
+                            ->warning()
+                            ->send();
+                    }),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(fn($records) => $records->each->forceDelete()),
                 ]),
             ]);
     }

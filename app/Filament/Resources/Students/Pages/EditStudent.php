@@ -17,7 +17,6 @@ class EditStudent extends EditRecord
         ];
     }
 
-    // Load data progress ke dalam form
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $progress = $this->record->progress;
@@ -27,7 +26,6 @@ class EditStudent extends EditRecord
         return $data;
     }
 
-    // Simpan data progress selepas student disimpan
     protected function afterSave(): void
     {
         $progressData = $this->data['progress'] ?? [];
