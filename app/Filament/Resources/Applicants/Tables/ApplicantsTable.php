@@ -80,19 +80,27 @@ class ApplicantsTable
                             ->placeholder('e.g. A23PM0001')
                             ->rules(['unique:students,matric_no']),
                     ])
-                    ->action(function(Applicant $record, array $data) {
+                   ->action(function(Applicant $record, array $data) {
                         $record->update(['status' => 'Approved']);
 
                         $student = Student::create([
-                            'applicant_id'   => $record->id,
-                            'matric_no'      => $data['matric_no'],
-                            'program_type'   => $record->program_applied,
-                            'gender'         => 'Male',
-                            'payment_method' => 'Self-funded',
-                            'status'         => 'Active',
+                            'applicant_id'           => $record->id,
+                            'matric_no'              => $data['matric_no'],
+                            'program_type'           => $record->program_applied,
+                            'email'                  => $record->email,
+                            'gender'                 => $record->gender,
+                            'application_docs_links' => $record->application_docs_links,
+                            'payment_method'         => 'Self-funded',
+                            'status'                 => 'Active',
                         ]);
 
-                        StudentProgress::create(['student_id' => $student->id]);
+                        // Map eng_test_taken dari applicant ke eng_test_status dalam progress
+                        $engStatus = $record->eng_test_taken === 'Taken' ? 'Passed' : 'Pending';
+
+                        StudentProgress::create([
+                            'student_id'      => $student->id,
+                            'eng_test_status' => $engStatus,
+                        ]);
 
                         Notification::make()
                             ->title('Applicant approved! Student record created.')

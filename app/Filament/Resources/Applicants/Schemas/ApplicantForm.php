@@ -46,9 +46,6 @@ class ApplicantForm
                 Textarea::make('prev_edu')
                     ->label('Previous Education')
                     ->columnSpanFull(),
-                TextInput::make('eng_test')
-                    ->label('MUET/IELTS Score')
-                    ->nullable(),
                 Select::make('eng_test_taken')
                     ->label('English Test Status')
                     ->options([
@@ -56,7 +53,12 @@ class ApplicantForm
                         'Not Taken' => 'Not Taken',
                     ])
                     ->default('Not Taken')
-                    ->required(),
+                    ->required()
+                    ->live(),
+                TextInput::make('eng_test')
+                    ->label('MUET/IELTS Score')
+                    ->nullable()
+                    ->visible(fn($get) => $get('eng_test_taken') === 'Taken'),
                 Select::make('status')
                     ->label('Status')
                     ->options(['Pending' => 'Pending', 'Rejected' => 'Rejected'])
@@ -75,6 +77,7 @@ class ApplicantForm
                         TextInput::make('url')
                             ->label('Google Drive URL')
                             ->url()
+                            ->copyable() 
                             ->required(),
                     ])
                     ->columns(2)

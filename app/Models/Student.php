@@ -21,9 +21,9 @@ class Student extends Model
         return $this->belongsTo(Applicant::class);
     }
 
-    public function progresses()  // Changed to hasMany
+    public function progress()
     {
-        return $this->hasMany(StudentProgress::class, 'student_id');  // Assumes FK name
+        return $this->hasOne(StudentProgress::class);
     }
 
     public function mainSupervisor()

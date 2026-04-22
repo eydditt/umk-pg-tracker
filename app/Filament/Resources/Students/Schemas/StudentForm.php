@@ -16,19 +16,16 @@ class StudentForm
     {
         return $schema->components([
 
-            // ── HEADER — Student Profile ──
+            // ── HEADER ──
             Section::make('Student Profile')->schema([
                 TextInput::make('matric_no')
                     ->label('Matric No')
-                    ->required()
-                    ->unique(ignoreRecord: true)
                     ->disabled(),
                 TextInput::make('applicant.full_name')
                     ->label('Student Name')
                     ->disabled(),
                 TextInput::make('email')
                     ->label('Email Address')
-                    ->email()
                     ->disabled(),
                 Select::make('program_type')
                     ->label('Program')
@@ -42,8 +39,8 @@ class StudentForm
                     ->label('Payment Method')
                     ->options([
                         'Scholarship' => 'Scholarship',
-                        'Self-funded'  => 'Self-funded',
-                        'Other'        => 'Other',
+                        'Self-funded' => 'Self-funded',
+                        'Other'       => 'Other',
                     ])
                     ->required(),
                 Select::make('status')
@@ -56,33 +53,55 @@ class StudentForm
                     ])
                     ->default('Active')
                     ->required(),
-                Select::make('main_sv_id')
-                    ->label('Main Supervisor')
-                    ->options(Lecturer::all()->pluck('full_name', 'id'))
-                    ->searchable()
-                    ->nullable(),
-                Select::make('co_sv_id')
-                    ->label('Co-Supervisor')
-                    ->options(Lecturer::all()->pluck('full_name', 'id'))
-                    ->searchable()
-                    ->nullable(),
             ])->columns(2),
 
-            // ── TABS — Phase P01 to P05 ──
+            // ── TABS ──
             Tabs::make('Progress Phases')->tabs([
 
+                // P01
                 Tabs\Tab::make('P01: Registration')->schema([
                     Select::make('progress.eng_test_status')
                         ->label('English Proficiency Status')
                         ->options(['Pending' => 'Pending', 'Passed' => 'Passed'])
                         ->required(),
+                    Section::make('Application Documents')->schema([
+                        Repeater::make('application_docs_links')
+                            ->label('')
+                            ->schema([
+                                TextInput::make('label')
+                                    ->label('Document Label')
+                                    ->required(),
+                                TextInput::make('url')
+                                    ->label('Google Drive URL')
+                                    ->url()
+                                    ->required(),
+                            ])
+                            ->columns(2)
+                            ->addActionLabel('+ Add Document')
+                            ->defaultItems(0)
+                            ->columnSpanFull(),
+                    ]),
                     self::gdriveLinkRepeater('P01'),
                 ]),
 
+                // P02
                 Tabs\Tab::make('P02: Supervision')->schema([
+                    Section::make('Supervisor Assignment')->schema([
+                        Select::make('main_sv_id')
+                            ->label('Main Supervisor')
+                            ->options(Lecturer::all()->pluck('full_name', 'id'))
+                            ->searchable()
+                            ->nullable(),
+                        Select::make('co_sv_id')
+                            ->label('Co-Supervisor')
+                            ->options(Lecturer::all()->pluck('full_name', 'id'))
+                            ->searchable()
+                            ->nullable(),
+                    ])->columns(2),
                     self::gdriveLinkRepeater('P02'),
                 ]),
 
+                // P03
                 Tabs\Tab::make('P03: Proposal Defense')->schema([
                     Select::make('progress.research_method')
                         ->label('Research Method')
@@ -98,10 +117,12 @@ class StudentForm
                     self::gdriveLinkRepeater('P03'),
                 ]),
 
+                // P04
                 Tabs\Tab::make('P04: Thesis')->schema([
                     self::gdriveLinkRepeater('P04'),
                 ]),
 
+                // P05
                 Tabs\Tab::make('P05: Viva')->schema([
                     Select::make('progress.pre_viva_status')
                         ->label('Pre-Viva Status')
@@ -133,7 +154,7 @@ class StudentForm
                     ->hidden(),
             ])
             ->columns(2)
-            ->addActionLabel('+ Add Link for Phase ' . $phase)
+            ->addActionLabel('+ Add Link')
             ->defaultItems(0)
             ->columnSpanFull();
     }

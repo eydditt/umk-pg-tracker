@@ -17,14 +17,23 @@ class EditStudent extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        $progress = $this->record->progress;
-        if ($progress) {
-            $data['progress'] = $progress->toArray();
+            protected function mutateFormDataBeforeFill(array $data): array
+        {
+            $student = $this->record->load(['applicant', 'progress']);
+            
+            // Load applicant data
+            if ($student->applicant) {
+                $data['applicant']['full_name'] = $student->applicant->full_name;
+                $data['email'] = $student->email ?? $student->applicant->email;
+            }
+
+            // Load progress data
+            if ($student->progress) {
+                $data['progress'] = $student->progress->toArray();
+            }
+
+            return $data;
         }
-        return $data;
-    }
 
     protected function afterSave(): void
     {
