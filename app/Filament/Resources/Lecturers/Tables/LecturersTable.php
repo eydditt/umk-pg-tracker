@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Lecturers\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -15,16 +17,16 @@ class LecturersTable
         return $table
             ->columns([
                 TextColumn::make('staff_no')
-                ->label('Staff No')
-                ->searchable()
-                ->sortable(),
-            TextColumn::make('full_name')
-                ->label('Full Name')
-                ->searchable()
-                ->sortable(),
-            TextColumn::make('mainStudents_count')
-                ->counts('mainStudents')
-                ->label('No. of Students'),
+                    ->label('Staff No')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('full_name')
+                    ->label('Full Name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('main_students_count')
+                    ->counts('mainStudents')
+                    ->label('No. of Students'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -33,10 +35,7 @@ class LecturersTable
             ->filters([])
             ->recordActions([
                 EditAction::make(),
-            ])
-           ->recordActions([
-                EditAction::make(),
-                \Filament\Actions\Action::make('delete')
+                Action::make('delete')
                     ->label('Delete')
                     ->icon('heroicon-o-trash')
                     ->color('danger')
@@ -46,7 +45,7 @@ class LecturersTable
                     ->action(function($record) {
                         $record->forceDelete();
 
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->title('Lecturer permanently deleted.')
                             ->warning()
                             ->send();

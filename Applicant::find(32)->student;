@@ -1,0 +1,24 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#9083
+    [34mall[39m: [
+      [34;4mApp\Models\Applicant[39;24m {#9084
+        [34mid[39m: [35m32[39m,
+        [34mfull_name[39m: [32m"[39m[32mMuhammad Hakim Bin Roslan[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9085
+        [34mid[39m: [35m33[39m,
+        [34mfull_name[39m: [32m"[39m[32mFarah Azman[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9086
+        [34mid[39m: [35m34[39m,
+        [34mfull_name[39m: [32m"[39m[32mRoslan[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+      },
+      [34;4mApp\Models\Applicant[39;24m {#9087
+        [34mid[39m: [35m37[39m,
+        [34mfull_name[39m: [32m"[39m[32mLembu[39m[32m"[39m,
+        [34mstatus[39m: [32m"[39m[32mApproved[39m[32m"[39m,
+      },
+    ],
+  }

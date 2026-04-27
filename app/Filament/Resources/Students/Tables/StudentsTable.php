@@ -26,7 +26,7 @@ class StudentsTable
                     ->label('Program')
                     ->badge()
                     ->color(fn(string $state) => match($state) {
-                        'PhD'    => 'danger',
+                        'PhD'    => 'purple',
                         'Master' => 'info',
                         default  => 'gray',
                     }),
