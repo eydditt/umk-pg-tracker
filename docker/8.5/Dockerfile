@@ -89,4 +89,9 @@ RUN chmod +x /usr/local/bin/start-container
 
 EXPOSE 80/tcp
 
+RUN apt-get update && apt-get install -y ca-certificates curl \
+    && curl -s https://letsencrypt.org/certs/isrgrootx1.pem >> /etc/ssl/certs/ca-certificates.crt \
+    && curl -s https://letsencrypt.org/certs/lets-encrypt-r3.pem >> /etc/ssl/certs/ca-certificates.crt \
+    && update-ca-certificates
+
 ENTRYPOINT ["start-container"]
