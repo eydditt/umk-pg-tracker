@@ -1,35 +1,251 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
+/* =========================================================
+   🎨 UMK FSDK DESIGN SYSTEM
+========================================================= */
+:root {
+    /* UMK Core */
+    --primary: #1e3a8a;        /* Deep Blue */
+    --primary-dark: #172554;
+    --primary-light: #3b82f6;
+
+    /* Accent (Gold - use carefully) */
+    --accent: #f59e0b;
+
+    /* Backgrounds */
+    --bg-main: #0b1120;
+    --bg-sidebar: #0f172a;
+    --bg-card: #111827;
+    --bg-card-soft: #1f2937;
+
+    /* Text */
+    --text-primary: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+
+    /* Status */
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+/* =========================================================
+   🧱 BASE
+========================================================= */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+}
+
+/* =========================================================
+   📌 SIDEBAR (ACADEMIC, CLEAN)
+========================================================= */
 .fi-sidebar {
-    background-color: #1a3a38 !important;
-    border-right: 1px solid #2A9D8F !important;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
 .fi-sidebar * {
-    color: #ffffff !important;
+    color: var(--text-primary);
 }
 
 .fi-sidebar svg {
-    stroke: #ffffff !important;
+    stroke: var(--text-secondary);
 }
 
 .fi-sidebar-item-btn {
-    background-color: transparent !important;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
 }
 
 .fi-sidebar-item-btn:hover {
-    background-color: #124d49 !important;
+    background-color: rgba(59,130,246,0.15);
 }
 
 .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
-    background-color: #1a6b65 !important;
+    background: linear-gradient(
+        90deg,
+        rgba(59,130,246,0.25),
+        rgba(30,58,138,0.25)
+    );
+    border-left: 3px solid var(--accent);
 }
 
+/* =========================================================
+   🔝 TOPBAR
+========================================================= */
 .fi-topbar nav {
-    background-color: #1a3a38 !important;
-    border-bottom: 1px solid #2A9D8F !important;
+    background-color: var(--bg-sidebar);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .fi-brand-name {
-    color: #ffffff !important;
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* =========================================================
+   📊 DASHBOARD CARDS (PRO LEVEL)
+========================================================= */
+.fi-section,
+.fi-card {
+    background: linear-gradient(
+        145deg,
+        #111827,
+        #0f172a
+    );
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: all 0.25s ease;
+}
+
+.fi-section:hover,
+.fi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+/* =========================================================
+   📝 TEXT HIERARCHY
+========================================================= */
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* =========================================================
+   📥 INPUTS
+========================================================= */
+.fi-input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.75rem;
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    transition: all 0.25s ease;
+}
+
+.fi-input::placeholder {
+    color: var(--text-muted);
+}
+
+.fi-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+}
+
+/* =========================================================
+   🔘 BUTTONS (UMK STYLE)
+========================================================= */
+.fi-btn-primary {
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 5px 20px rgba(30,58,138,0.4);
+}
+
+.fi-btn-primary:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(
+        135deg,
+        var(--primary-light),
+        var(--primary)
+    );
+}
+
+/* =========================================================
+   🏷️ STATUS COLORS (CONSISTENT SYSTEM)
+========================================================= */
+.text-success {
+    color: var(--success);
+}
+
+.text-warning {
+    color: var(--warning);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+/* =========================================================
+   🔐 LOGIN PAGE (PROFESSIONAL + CLEAN)
+========================================================= */
+.fi-simple-layout {
+    min-height: 100vh;
+    background: radial-gradient(
+        circle at top left,
+        #1e3a8a 0%,
+        #0b1120 60%
+    );
+    position: relative;
+}
+
+/* Overlay */
+.fi-simple-layout::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(11,17,32,0.3),
+        rgba(11,17,32,0.85)
+    );
+    backdrop-filter: blur(2px);
+}
+
+/* Container */
+.fi-simple-main-ctn {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login Card */
+.fi-simple-main {
+    width: 420px;
+    background: rgba(17,24,39,0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+/* Headings */
+.fi-simple-main h2 {
+    color: #ffffff;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.fi-simple-main p {
+    color: var(--text-secondary);
+}
+
+/* Links */
+.fi-simple-main a {
+    color: var(--accent);
+}
+
+.fi-simple-main a:hover {
+    opacity: 0.8;
+}
+
+/* Hide default header */
+.fi-simple-layout .fi-simple-header {
+    display: none;
 }

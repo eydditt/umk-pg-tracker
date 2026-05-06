@@ -47,4 +47,12 @@ class LecturerResource extends Resource
             'edit'   => EditLecturer::route('/{record}/edit'),
         ];
     }
+
+    public static function getWidgets(): array
+    {
+        return [
+            \App\Filament\Resources\Lecturers\Widgets\LecturerStats::class,
+        ];
+    }
+
 }

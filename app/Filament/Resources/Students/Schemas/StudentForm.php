@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Students\Schemas;
 
 use App\Models\Lecturer;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -18,28 +20,24 @@ class StudentForm
         return $schema->components([
 
             Section::make('Student Profile')
-                ->description('⚠️ Some fields are locked to maintain data integrity. To make changes to locked fields, please delete the student and applicant records.')
+                ->description('⚠️ Locked fields maintain data integrity. To change locked fields, delete and re-register the student.')
                 ->schema([
                     TextInput::make('matric_no')
                         ->label('Matric No')
                         ->disabled()
-                        ->hintIcon('heroicon-o-lock-closed')
-                        ->hint('Locked'),
+                        ->hint('Locked')->hintIcon('heroicon-o-lock-closed'),
                     TextInput::make('applicant.full_name')
                         ->label('Student Name')
                         ->disabled()
-                        ->hintIcon('heroicon-o-lock-closed')
-                        ->hint('Locked'),
+                        ->hint('Locked')->hintIcon('heroicon-o-lock-closed'),
                     TextInput::make('applicant.identity_type')
                         ->label('Identity Type')
                         ->disabled()
-                        ->hintIcon('heroicon-o-lock-closed')
-                        ->hint('Locked'),
+                        ->hint('Locked')->hintIcon('heroicon-o-lock-closed'),
                     TextInput::make('applicant.identity_no')
                         ->label('Identity Number')
                         ->disabled()
-                        ->hintIcon('heroicon-o-lock-closed')
-                        ->hint('Locked'),
+                        ->hint('Locked')->hintIcon('heroicon-o-lock-closed'),
                     TextInput::make('email')
                         ->label('Email Address')
                         ->email()
@@ -51,10 +49,6 @@ class StudentForm
                         ->required()
                         ->dehydrated(true)
                         ->hint('Editable'),
-                    Textarea::make('applicant_prev_edu')
-                        ->label('Previous Education')
-                        ->dehydrated(true)
-                        ->columnSpanFull(),
                     Select::make('program_type')
                         ->label('Program')
                         ->options(['Master' => 'Master', 'PhD' => 'PhD'])
@@ -80,143 +74,237 @@ class StudentForm
                         ->default('Active')
                         ->required()
                         ->dehydrated(true),
-                ])->columns(2)->columnSpanFull(),
+                    Textarea::make('applicant_prev_edu')
+                        ->label('Previous Education')
+                        ->dehydrated(true)
+                        ->columnSpanFull(),
+                ])->columns(3)->columnSpanFull(),
 
             Tabs::make('Progress Phases')->tabs([
-                
 
                 Tabs\Tab::make('P01: Registration')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Faculty-level recruitment documents required for registration.')
+                        ->schema([self::infoBox([
+                            'Borang Permohonan Kemasukan Pelajar Pascasiswazah',
+                            'Salinan Sijil Akademik Lepas (Disahkan)',
+                            'Salinan Transkrip Akademik (Disahkan)',
+                            'Salinan IC / Passport',
+                            'Gambar Passport Terbaru',
+                            'Surat Sokongan / Pengesahan Majikan (jika berkaitan)',
+                        ])])->collapsible()->collapsed(),
 
-                Section::make('Application Documents (from Applicant)')
-                        ->description('Documents submitted during application.')
+                    Section::make('📁 Application Documents (from Applicant)')
+                        ->description('Documents submitted during application. Read-only — manage in Applicant module.')
                         ->schema([
                             Repeater::make('application_docs_links')
                                 ->label('')
                                 ->schema([
-                                    TextInput::make('label')
-                                        ->label('Document Label')
-                                        ->disabled(),
-                                    TextInput::make('url')
-                                        ->label('Google Drive URL')
-                                        ->disabled()
-                                        ->copyable(),
+                                    TextInput::make('label')->label('Document Label')->disabled(),
+                                    TextInput::make('url')->label('URL')->disabled()->copyable(),
                                 ])
                                 ->columns(2)
-                                ->addable(false)
-                                ->deletable(false)
-                                ->reorderable(false)
+                                ->addable(false)->deletable(false)->reorderable(false)
                                 ->columnSpanFull(),
-                        ]),
+                        ])->collapsible()->collapsed(),
 
-                    Select::make('progress.eng_test_status')
-                        ->label('English Proficiency Status')
-                        ->options(['Pending' => 'Pending', 'Passed' => 'Passed'])
-                        ->required()
-                        ->dehydrated(true)
-                        ->live(),
-                    TextInput::make('eng_test')
-                        ->label('MUET/IELTS Score')
-                        ->dehydrated(true),
-                    Repeater::make('gdrive_p01')
-                        ->label('Google Drive Documents — Phase P01')
-                        ->schema([
-                            TextInput::make('label')->label('Document Label')->required(),
-                            TextInput::make('url')->label('Google Drive URL')->url()->required(),
-                        ])
-                        ->columns(2)
-                        ->addActionLabel('+ Add Link for P01')
-                        ->defaultItems(0)
-                        ->columnSpanFull(),
+                    Section::make('English Proficiency')->schema([
+                        Select::make('progress.eng_test_status')
+                            ->label('Status')
+                            ->options(['Pending' => 'Pending', 'Passed' => 'Passed'])
+                            ->required()->dehydrated(true)->live(),
+                        TextInput::make('eng_test')
+                            ->label('MUET/IELTS Score')
+                            ->dehydrated(true),
+                    ])->columns(2),
+
+                    self::gdriveRepeater('gdrive_p01', 'P01'),
                 ]),
 
-                Tabs\Tab::make('P02: Supervision')->schema([
+                Tabs\Tab::make('P02: Admission & Registration')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Program registration, intake documents, and official transfer approvals.')
+                        ->schema([self::infoBox([
+                            'Borang Kemasukan Program',
+                            'Surat Tawaran Rasmi',
+                            'Borang Pertukaran Program (jika ada)',
+                            'Slip Pendaftaran Semester',
+                        ])])->collapsible()->collapsed(),
+
+                    self::gdriveRepeater('gdrive_p02', 'P02'),
+                ]),
+
+                Tabs\Tab::make('P03: Supervisor Appointment')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Official selection and appointment of supervisors.')
+                        ->schema([self::infoBox([
+                            'Borang Pelantikan Penyelia Utama',
+                            'Borang Pelantikan Penyelia Bersama (jika ada)',
+                            'Surat Persetujuan Penyelia',
+                        ])])->collapsible()->collapsed(),
+
                     Section::make('Supervisor Assignment')->schema([
                         Select::make('main_sv_id')
                             ->label('Main Supervisor')
                             ->options(Lecturer::all()->pluck('full_name', 'id'))
-                            ->searchable()
-                            ->dehydrated(true)
-                            ->nullable(),
+                            ->searchable()->dehydrated(true)->nullable(),
                         Select::make('co_sv_id')
                             ->label('Co-Supervisor')
                             ->options(Lecturer::all()->pluck('full_name', 'id'))
-                            ->searchable()
-                            ->dehydrated(true)
-                            ->nullable(),
+                            ->searchable()->dehydrated(true)->nullable(),
                     ])->columns(2),
-                    Repeater::make('gdrive_p02')
-                        ->label('Google Drive Documents — Phase P02')
-                        ->schema([
-                            TextInput::make('label')->label('Document Label')->required(),
-                            TextInput::make('url')->label('Google Drive URL')->url()->required(),
-                        ])
-                        ->columns(2)
-                        ->addActionLabel('+ Add Link for P02')
-                        ->defaultItems(0)
-                        ->columnSpanFull(),
+
+                    self::gdriveRepeater('gdrive_p03', 'P03'),
                 ]),
 
-                Tabs\Tab::make('P03: Proposal Defense')->schema([
-                    Select::make('progress.research_method')
-                        ->label('Research Method')
-                        ->options(['Pending' => 'Pending', 'Passed' => 'Passed'])
-                        ->dehydrated(true),
-                    Select::make('progress.pd_status')
-                        ->label('Proposal Defense Status')
-                        ->options([
-                            'Pending'          => 'Pending',
-                            'Passed'           => 'Passed',
-                            'Minor Correction' => 'Minor Correction',
-                            'Major Correction' => 'Major Correction',
-                        ])
-                        ->dehydrated(true),
-                    Repeater::make('gdrive_p03')
-                        ->label('Google Drive Documents — Phase P03')
-                        ->schema([
-                            TextInput::make('label')->label('Document Label')->required(),
-                            TextInput::make('url')->label('Google Drive URL')->url()->required(),
-                        ])
-                        ->columns(2)
-                        ->addActionLabel('+ Add Link for P03')
-                        ->defaultItems(0)
-                        ->columnSpanFull(),
+                Tabs\Tab::make('P04: Thesis Evaluation')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Thesis preparation, proofreading, and formal submission for examination.')
+                        ->schema([self::infoBox([
+                            'Notis Penghantaran Tesis',
+                            'Laporan Pruf Baca (Proofreading)',
+                            'Borang Pelantikan Pemeriksa',
+                            'Salinan Tesis (Soft Copy)',
+                        ])])->collapsible()->collapsed(),
+
+                    Section::make('Thesis Progress')->schema([
+                        Select::make('progress.research_method')
+                            ->label('Research Method')
+                            ->options(['Pending' => 'Pending', 'Passed' => 'Passed'])
+                            ->dehydrated(true),
+                        Select::make('progress.pd_status')
+                            ->label('Proposal Defense')
+                            ->options([
+                                'Pending'          => 'Pending',
+                                'Passed'           => 'Passed',
+                                'Minor Correction' => 'Minor Correction',
+                                'Major Correction' => 'Major Correction',
+                            ])->dehydrated(true),
+                        Select::make('progress.pre_viva_status')
+                            ->label('Pre-Viva')
+                            ->options(['Pending' => 'Pending', 'Passed' => 'Passed', 'Failed' => 'Failed'])
+                            ->dehydrated(true),
+                        Select::make('progress.viva_status')
+                            ->label('Viva')
+                            ->options(['Pending' => 'Pending', 'Passed' => 'Passed', 'Failed' => 'Failed'])
+                            ->dehydrated(true),
+                    ])->columns(2),
+
+                    self::gdriveRepeater('gdrive_p04', 'P04'),
                 ]),
 
-                Tabs\Tab::make('P04: Thesis')->schema([
-                    Repeater::make('gdrive_p04')
-                        ->label('Google Drive Documents — Phase P04')
-                        ->schema([
-                            TextInput::make('label')->label('Document Label')->required(),
-                            TextInput::make('url')->label('Google Drive URL')->url()->required(),
-                        ])
-                        ->columns(2)
-                        ->addActionLabel('+ Add Link for P04')
-                        ->defaultItems(0)
-                        ->columnSpanFull(),
+                Tabs\Tab::make('P05: Scholarship & Fees')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Tuition fee payments, scholarships, and financial assistance records.')
+                        ->schema([self::infoBox([
+                            'Resit Bayaran Yuran Pengajian',
+                            'Surat Tawaran Biasiswa',
+                            'Borang Permohonan Bantuan Kewangan',
+                            'Penyata Akaun Pembayaran',
+                        ])])->collapsible()->collapsed(),
+
+                    Section::make('Financial Status')->schema([
+                        Select::make('progress.scholarship_status')
+                            ->label('Scholarship Status')
+                            ->options([
+                                'Not Applicable' => 'Not Applicable',
+                                'Pending'        => 'Pending',
+                                'Approved'       => 'Approved',
+                                'Rejected'       => 'Rejected',
+                            ])->dehydrated(true),
+                        Select::make('progress.tuition_fee_status')
+                            ->label('Tuition Fee Status')
+                            ->options([
+                                'Pending' => 'Pending',
+                                'Paid'    => 'Paid',
+                                'Partial' => 'Partial',
+                                'Waived'  => 'Waived',
+                            ])->dehydrated(true),
+                    ])->columns(2),
+
+                    self::gdriveRepeater('gdrive_p05', 'P05'),
                 ]),
 
-                Tabs\Tab::make('P05: Viva')->schema([
-                    Select::make('progress.pre_viva_status')
-                        ->label('Pre-Viva Status')
-                        ->options(['Pending' => 'Pending', 'Passed' => 'Passed', 'Failed' => 'Failed'])
-                        ->dehydrated(true),
-                    Select::make('progress.viva_status')
-                        ->label('Viva Status')
-                        ->options(['Pending' => 'Pending', 'Passed' => 'Passed', 'Failed' => 'Failed'])
-                        ->dehydrated(true),
-                    Repeater::make('gdrive_p05')
-                        ->label('Google Drive Documents — Phase P05')
-                        ->schema([
-                            TextInput::make('label')->label('Document Label')->required(),
-                            TextInput::make('url')->label('Google Drive URL')->url()->required(),
-                        ])
-                        ->columns(2)
-                        ->addActionLabel('+ Add Link for P05')
-                        ->defaultItems(0)
-                        ->columnSpanFull(),
+                Tabs\Tab::make('P06: Academic Progress')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Research milestones, progress reports, and monitoring assessments.')
+                        ->schema([self::infoBox([
+                            'Laporan Kemajuan Penyelidikan (Semesterly)',
+                            'Borang Penilaian Penyelia',
+                            'Minit Mesyuarat Penyelia-Pelajar',
+                            'Log Aktiviti Penyelidikan',
+                        ])])->collapsible()->collapsed(),
+
+                    Section::make('Progress Monitoring')->schema([
+                        Select::make('progress.progress_report_status')
+                            ->label('Progress Report Status')
+                            ->options([
+                                'Pending'   => 'Pending',
+                                'Submitted' => 'Submitted',
+                                'Approved'  => 'Approved',
+                                'Rejected'  => 'Rejected',
+                            ])->dehydrated(true),
+                        DatePicker::make('progress.last_progress_report_date')
+                            ->label('Last Report Date')
+                            ->dehydrated(true),
+                    ])->columns(2),
+
+                    self::gdriveRepeater('gdrive_p06', 'P06'),
+                ]),
+
+                Tabs\Tab::make('P07: Award & Graduation')->schema([
+                    Section::make('📋 Required Documents')
+                        ->description('Final stage documentation for academic award verification and official degree conferral (Master & PhD).')
+                        ->schema([self::infoBox([
+                            'Borang Permohonan Konvokesyen',
+                            'Surat Kelulusan Senat / Jawatankuasa Pengajian Siswazah',
+                            'Transkrip Akademik Akhir (Disahkan)',
+                            'Sijil Ijazah Sarjana / Doktor Falsafah',
+                            'Borang Pengesahan MQA (Malaysian Qualifications Agency)',
+                            'Laporan Pembetulan Tesis Akhir (jika ada)',
+                            'Borang Pengesahan Penyerahan Tesis Akhir',
+                        ])])->collapsible()->collapsed(),
+
+                    Section::make('Award Status')->schema([
+                        Select::make('progress.degree_verification_status')
+                            ->label('Verification Status')
+                            ->options([
+                                'Pending'     => 'Pending',
+                                'In Progress' => 'In Progress',
+                                'Verified'    => 'Verified',
+                                'Awarded'     => 'Awarded',
+                            ])->dehydrated(true),
+                        DatePicker::make('progress.graduation_date')
+                            ->label('Graduation Date')
+                            ->dehydrated(true),
+                    ])->columns(2),
+
+                    self::gdriveRepeater('gdrive_p07', 'P07'),
                 ]),
 
             ])->columnSpanFull(),
         ]);
+    }
+
+    protected static function gdriveRepeater(string $field, string $phase): Repeater
+    {
+        return Repeater::make($field)
+            ->label('Google Drive Documents — ' . $phase)
+            ->schema([
+                TextInput::make('label')->label('Document Label')->required(),
+                TextInput::make('url')->label('Google Drive URL')->url()->required()->copyable(),
+            ])
+            ->columns(2)
+            ->addActionLabel('+ Add Link for ' . $phase)
+            ->defaultItems(0)
+            ->columnSpanFull();
+    }
+
+    protected static function infoBox(array $items): Placeholder
+    {
+        $list = collect($items)->map(fn($item) => "• {$item}")->implode("\n");
+        return Placeholder::make('required_docs_info')
+            ->label('')
+            ->content($list);
     }
 }

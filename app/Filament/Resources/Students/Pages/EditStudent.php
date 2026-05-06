@@ -28,14 +28,14 @@ class EditStudent extends EditRecord
             $data['email']                      = $student->email ?? $student->applicant->email;
             $data['eng_test']                   = $student->applicant->eng_test;
             $data['applicant_prev_edu']         = $student->applicant->prev_edu;
-            $data['application_docs_links'] = $student->application_docs_links ?? [];
+            $data['application_docs_links']     = $student->application_docs_links ?? [];
         }
 
         if ($student->progress) {
             $data['progress'] = $student->progress->toArray();
 
             $links = $student->progress->gdrive_links ?? [];
-            foreach (['P01', 'P02', 'P03', 'P04', 'P05'] as $phase) {
+            foreach (['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07'] as $phase) {
                 $data['gdrive_' . strtolower($phase)] = collect($links)
                     ->filter(fn($link) => ($link['phase'] ?? '') === $phase)
                     ->values()
@@ -52,7 +52,7 @@ class EditStudent extends EditRecord
 
         // Gabungkan semua gdrive links dari setiap phase
         $allLinks = [];
-        foreach (['p01', 'p02', 'p03', 'p04', 'p05'] as $phase) {
+        foreach (['p01', 'p02', 'p03', 'p04', 'p05', 'p06', 'p07'] as $phase) {
             $links = $this->data['gdrive_' . $phase] ?? [];
             foreach ($links as $link) {
                 $allLinks[] = [
@@ -67,12 +67,18 @@ class EditStudent extends EditRecord
         $this->record->progress()->updateOrCreate(
             ['student_id' => $this->record->id],
             [
-                'eng_test_status' => $progressData['eng_test_status'] ?? 'Pending',
-                'research_method' => $progressData['research_method'] ?? 'Pending',
-                'pd_status'       => $progressData['pd_status'] ?? 'Pending',
-                'pre_viva_status' => $progressData['pre_viva_status'] ?? 'Pending',
-                'viva_status'     => $progressData['viva_status'] ?? 'Pending',
-                'gdrive_links'    => $allLinks,
+                'eng_test_status'          => $progressData['eng_test_status'] ?? 'Pending',
+                'research_method'          => $progressData['research_method'] ?? 'Pending',
+                'pd_status'                => $progressData['pd_status'] ?? 'Pending',
+                'pre_viva_status'          => $progressData['pre_viva_status'] ?? 'Pending',
+                'viva_status'              => $progressData['viva_status'] ?? 'Pending',
+                'scholarship_status'       => $progressData['scholarship_status'] ?? 'Not Applicable',
+                'tuition_fee_status'       => $progressData['tuition_fee_status'] ?? 'Pending',
+                'progress_report_status'   => $progressData['progress_report_status'] ?? 'Pending',
+                'last_progress_report_date'=> $progressData['last_progress_report_date'] ?? null,
+                'degree_verification_status' => $progressData['degree_verification_status'] ?? 'Pending',
+                'graduation_date'          => $progressData['graduation_date'] ?? null,
+                'gdrive_links'             => $allLinks,
             ]
         );
 
@@ -89,7 +95,6 @@ class EditStudent extends EditRecord
 
         // Sync back to applicant
         if ($this->record->applicant) {
-
             $this->record->applicant->update([
                 'eng_test' => $this->data['eng_test'] ?? $this->record->applicant->eng_test,
                 'prev_edu' => $this->data['applicant_prev_edu'] ?? $this->record->applicant->prev_edu,

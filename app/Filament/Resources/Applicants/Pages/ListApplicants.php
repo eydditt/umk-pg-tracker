@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Applicants\Pages;
 
 use App\Filament\Resources\Applicants\ApplicantResource;
+use App\Filament\Resources\Applicants\Widgets\ApplicantStats;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,6 +15,13 @@ class ListApplicants extends ListRecords
     {
         return [
             CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ApplicantStats::class,
         ];
     }
 }

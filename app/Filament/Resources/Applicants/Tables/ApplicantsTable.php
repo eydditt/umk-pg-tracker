@@ -14,6 +14,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class ApplicantsTable
 {
@@ -130,7 +131,10 @@ class ApplicantsTable
                     ->color('danger')
                     ->requiresConfirmation()
                     ->modalHeading('Permanently Delete Applicant')
-                    ->modalDescription('Are you sure? This record will be permanently removed from the system.')
+                    ->modalDescription(new HtmlString(
+                        'Are you sure you want to delete this applicant? This action is irreversible, and the record will be permanently removed from the system.<br><br>
+                        <strong>⚠️ Note:</strong> If the applicant has already become a student, their student record will also be affected.'
+                    ))
                     ->visible(fn(Applicant $record) => $record->status !== 'Approved')
                     ->action(function(Applicant $record) {
                         $record->forceDelete();
