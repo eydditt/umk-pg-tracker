@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Filament\Support\Facades\FilamentColor;
+use Filament\Support\Colors\Color;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,5 +37,11 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             });
         }
+
+         FilamentColor::register([
+        'phd' => Color::hex('#7C3AED'),
+        'master' => Color::hex('#0891B2'),
+        
+    ]);
     }
 }

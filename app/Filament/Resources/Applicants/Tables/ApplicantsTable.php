@@ -33,8 +33,8 @@ class ApplicantsTable
                     ->label('Program')
                     ->badge()
                     ->color(fn(string $state) => match($state) {
-                        'PhD'    => 'purple',
-                        'Master' => 'info',
+                        'PhD'    => 'phd',
+                        'Master' => 'master',
                         default  => 'gray',
                     }),
                 TextColumn::make('status')
