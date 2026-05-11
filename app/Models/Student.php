@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = [
-        'applicant_id', 'matric_no', 'email', 'application_docs_links',
-        'program_type', 'gender', 'payment_method',
-        'main_sv_id', 'co_sv_id', 'status',
+    'applicant_id', 'matric_no', 'email', 'application_docs_links',
+    'program_type', 'intake_session', 'gender', 'payment_method',
+    'main_sv_id', 'co_sv_id', 'status',
     ];
 
     protected $casts = [

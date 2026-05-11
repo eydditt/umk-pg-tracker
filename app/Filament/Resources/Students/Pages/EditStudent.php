@@ -88,6 +88,7 @@ class EditStudent extends EditRecord
             'gender'         => $this->data['gender'] ?? $this->record->gender,
             'program_type'   => $this->data['program_type'] ?? $this->record->program_type,
             'payment_method' => $this->data['payment_method'] ?? $this->record->payment_method,
+            'intake_session' => $this->data['intake_session'] ?? $this->record->intake_session,
             'status'         => $this->data['status'] ?? $this->record->status,
             'main_sv_id'     => $this->data['main_sv_id'] ?? null,
             'co_sv_id'       => $this->data['co_sv_id'] ?? null,

@@ -11,7 +11,7 @@ class Applicant extends Model
 
     protected $fillable = [
     'full_name', 'email', 'gender', 'identity_type', 'identity_no',
-    'program_applied', 'prev_edu', 'eng_test',
+    'program_applied', 'intake_session', 'prev_edu', 'eng_test',
     'status', 'application_docs_links', 'eng_test_taken',
     ];
 

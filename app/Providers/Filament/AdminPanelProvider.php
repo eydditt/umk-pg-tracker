@@ -30,10 +30,29 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->passwordReset()
-            ->brandName('KICAU MANIA ')
+            ->brandName('UMK PG Tracker')
             ->colors([
                 'primary' => Color::hex('#2A9D8F'),
             ])
+            
+            ->renderHook(
+                    PanelsRenderHook::HEAD_END,
+                    fn() => Blade::render('
+                        <style>
+                            .fi-simple-main input[type="email"],
+                            .fi-simple-main input[type="password"],
+                            .fi-simple-main input[type="text"] {
+                                color-scheme: dark !important;
+                                background: rgba(255,255,255,0.15) !important;
+                                color: #ffffff !important;
+                                -webkit-text-fill-color: #ffffff !important;
+                                caret-color: #ffffff !important;
+                                border: 1.5px solid rgba(255,255,255,0.35) !important;
+                                border-radius: 0.75rem !important;
+                            }
+                        </style>
+                    ')
+                )
             ->renderHook(
                 PanelsRenderHook::BODY_END,
                 fn() => Blade::render('
@@ -106,12 +125,33 @@ class AdminPanelProvider extends PanelProvider
                             <img src="/images/logo/logofsdk.png" alt="FSDK Logo"
                                 style="height: 100px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)) brightness(1.1);">
                         </div>
-                        <p style="color: #94a3b8; font-size: 0.8rem; font-weight: 400; margin: 0; letter-spacing: 0.04em; text-transform: uppercase;">
+                        <h2 style="color: #ffffff; font-size: 1.3rem; font-weight: 700; margin: 0 0 0.5rem; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
+                            UMK PG Tracker
+                        </h2>
+                        <p style="color: rgba(255,255,255,0.65); font-size: 0.78rem; font-weight: 400; margin: 0; letter-spacing: 0.06em; text-transform: uppercase;">
                             Administrative Portal &mdash; Postgraduate Student Management
                         </p>
                     </div>
                 ')
             )
+            ->renderHook(
+                    PanelsRenderHook::AUTH_PASSWORD_RESET_REQUEST_FORM_BEFORE,
+                    fn() => Blade::render('
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <h2 style="color: #ffffff; font-size: 1.3rem; font-weight: 700; margin: 0 0 0.5rem; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
+                                🔐 Reset Your Password
+                            </h2>
+                            <p style="color: rgba(255,255,255,0.7); font-size: 0.83rem; margin: 0 0 0.4rem; line-height: 1.6;">
+                                Enter your registered email address below.<br>
+                                We will send you a secure password reset link.
+                            </p>
+                            <p style="color: rgba(255,255,255,0.45); font-size: 0.75rem; margin: 0;">
+                                ⏱ The reset link will expire in
+                                <strong style="color: #2A9D8F;">60 minutes</strong>.
+                            </p>
+                        </div>
+                    ')
+                )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

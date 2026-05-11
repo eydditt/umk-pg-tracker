@@ -1,251 +1,94 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-/* =========================================================
-   🎨 UMK FSDK DESIGN SYSTEM
-========================================================= */
-:root {
-    /* UMK Core */
-    --primary: #1e3a8a;        /* Deep Blue */
-    --primary-dark: #172554;
-    --primary-light: #3b82f6;
+/* ── SIDEBAR ── */
+.fi-sidebar { background-color: #1a3a38 !important; border-right: 1px solid #2A9D8F !important; }
+.fi-sidebar * { color: #ffffff !important; }
+.fi-sidebar svg { stroke: #ffffff !important; }
+.fi-sidebar-item-btn { background-color: transparent !important; }
+.fi-sidebar-item-btn:hover { background-color: #124d49 !important; }
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn { background-color: #1a6b65 !important; }
 
-    /* Accent (Gold - use carefully) */
-    --accent: #f59e0b;
+/* ── TOPBAR ── */
+.fi-topbar nav { background-color: #1a3a38 !important; border-bottom: 1px solid #2A9D8F !important; }
+.fi-topbar .fi-brand-name { color: #ffffff !important; }
 
-    /* Backgrounds */
-    --bg-main: #0b1120;
-    --bg-sidebar: #0f172a;
-    --bg-card: #111827;
-    --bg-card-soft: #1f2937;
+/* ── LOGIN LAYOUT ── */
+.fi-simple-layout { min-height: 100vh !important; padding: 0 !important; position: relative !important; overflow: hidden !important; background: #0f172a !important; }
+.fi-simple-layout::after { content: '' !important; position: fixed !important; inset: 0 !important; z-index: 1 !important; background: rgba(0,0,0,0.45) !important; pointer-events: none !important; }
+.fi-simple-main-ctn { position: relative !important; z-index: 10 !important; min-height: 100vh !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 2rem !important; background: transparent !important; }
 
-    /* Text */
-    --text-primary: #e5e7eb;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
+/* ── LOGIN CARD ── */
+.fi-simple-main { width: 440px !important; max-width: 92vw !important; background: rgba(255,255,255,0.13) !important; backdrop-filter: blur(28px) saturate(160%) !important; -webkit-backdrop-filter: blur(28px) saturate(160%) !important; border: 1px solid rgba(255,255,255,0.28) !important; border-radius: 1.75rem !important; padding: 2.75rem 2.5rem !important; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.15) inset !important; position: relative !important; z-index: 20 !important; pointer-events: auto !important; color-scheme: dark !important; }
+.fi-simple-main::before { content: '' !important; position: absolute !important; top: 0 !important; left: 10% !important; right: 10% !important; height: 1px !important; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent) !important; pointer-events: none !important; z-index: 0 !important; }
+.fi-simple-main > * { position: relative !important; z-index: 10 !important; }
 
-    /* Status */
-    --success: #22c55e;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+/* ── TEXT ── */
+.fi-simple-main, .fi-simple-main p, .fi-simple-main span:not(.fi-badge) { color: #ffffff !important; }
+.fi-simple-main label { color: rgba(255,255,255,0.9) !important; font-size: 0.875rem !important; font-weight: 500 !important; cursor: pointer !important; pointer-events: auto !important; position: relative !important; z-index: 50 !important; }
+
+/* ── INPUTS — always glassy ── */
+.fi-simple-layout .fi-simple-main input[type="email"],
+.fi-simple-layout .fi-simple-main input[type="password"],
+.fi-simple-layout .fi-simple-main input[type="text"],
+.fi-simple-layout .fi-simple-main .fi-input {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1.5px solid rgba(255,255,255,0.35) !important;
+    border-radius: 0.75rem !important;
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    color-scheme: dark !important;
+    font-size: 0.95rem !important;
+    transition: all 0.25s ease !important;
+    box-shadow: none !important;
+}
+.fi-simple-layout .fi-simple-main input[type="email"]:focus,
+.fi-simple-layout .fi-simple-main input[type="password"]:focus,
+.fi-simple-layout .fi-simple-main input[type="text"]:focus {
+    background: rgba(255,255,255,0.22) !important;
+    border-color: #2A9D8F !important;
+    box-shadow: 0 0 0 3px rgba(42,157,143,0.3) !important;
+    outline: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+.fi-simple-layout .fi-simple-main input::placeholder { color: rgba(255,255,255,0.45) !important; -webkit-text-fill-color: rgba(255,255,255,0.45) !important; }
+.fi-simple-layout .fi-simple-main input:-webkit-autofill,
+.fi-simple-layout .fi-simple-main input:-webkit-autofill:hover,
+.fi-simple-layout .fi-simple-main input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0px 1000px rgba(42,157,143,0.3) inset !important; -webkit-text-fill-color: #ffffff !important; caret-color: #ffffff !important; }
+
+/* ── REMEMBER ME ── */
+.fi-simple-main input[type="checkbox"] { appearance: auto !important; -webkit-appearance: auto !important; pointer-events: auto !important; cursor: pointer !important; position: relative !important; z-index: 999 !important; opacity: 1 !important; accent-color: #2A9D8F !important; width: 1.1rem !important; height: 1.1rem !important; display: inline-block !important; }
+.fi-simple-main .fi-fo-field-wrp, .fi-simple-main [data-field-wrapper], .fi-simple-main .fi-checkbox-input { pointer-events: auto !important; cursor: pointer !important; z-index: 999 !important; position: relative !important; }
+.fi-simple-main::before, .fi-simple-main::after { pointer-events: none !important; }
+
+/* ── PASSWORD EYE ICON ── */
+.fi-simple-main button:not([type="submit"]) { pointer-events: auto !important; cursor: pointer !important; z-index: 50 !important; position: relative !important; }
+.fi-simple-main button:not([type="submit"]) svg { stroke: rgba(255,255,255,0.7) !important; }
+
+/* ── SIGN IN BUTTON ── */
+.fi-simple-main button[type="submit"] { background: linear-gradient(135deg, #2A9D8F, #1a6b65) !important; border: none !important; border-radius: 0.875rem !important; color: #ffffff !important; font-weight: 700 !important; font-size: 0.9rem !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; padding: 0.85rem 1.5rem !important; width: 100% !important; cursor: pointer !important; pointer-events: auto !important; position: relative !important; z-index: 50 !important; transition: all 0.3s ease !important; box-shadow: 0 4px 20px rgba(42,157,143,0.45) !important; }
+.fi-simple-main button[type="submit"]:hover { background: linear-gradient(135deg, #34b8a8, #2A9D8F) !important; transform: translateY(-2px) !important; box-shadow: 0 8px 30px rgba(42,157,143,0.55) !important; }
+
+/* ── LINKS ── */
+.fi-simple-main a { color: rgba(255,255,255,0.85) !important; pointer-events: auto !important; position: relative !important; z-index: 50 !important; transition: color 0.2s !important; text-decoration: none !important; }
+.fi-simple-main a:hover { color: #2A9D8F !important; }
+
+/* ── HIDE DEFAULT HEADER ── */
+.fi-simple-layout .fi-simple-header { display: none !important; }
+.fi-simple-main .fi-simple-header-heading { display: none !important; }
+
+/* ── INPUT WRAPPER — force glassy ── */
+.fi-simple-main .fi-input-wrp {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+    border-radius: 0.75rem !important;
+    color-scheme: dark !important;
+    box-shadow: none !important;
 }
 
-/* =========================================================
-   🧱 BASE
-========================================================= */
-body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-}
-
-/* =========================================================
-   📌 SIDEBAR (ACADEMIC, CLEAN)
-========================================================= */
-.fi-sidebar {
-    background-color: var(--bg-sidebar);
-    border-right: 1px solid rgba(255,255,255,0.05);
-}
-
-.fi-sidebar * {
-    color: var(--text-primary);
-}
-
-.fi-sidebar svg {
-    stroke: var(--text-secondary);
-}
-
-.fi-sidebar-item-btn {
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-}
-
-.fi-sidebar-item-btn:hover {
-    background-color: rgba(59,130,246,0.15);
-}
-
-.fi-sidebar-item.fi-active .fi-sidebar-item-btn {
-    background: linear-gradient(
-        90deg,
-        rgba(59,130,246,0.25),
-        rgba(30,58,138,0.25)
-    );
-    border-left: 3px solid var(--accent);
-}
-
-/* =========================================================
-   🔝 TOPBAR
-========================================================= */
-.fi-topbar nav {
-    background-color: var(--bg-sidebar);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.fi-brand-name {
-    color: #ffffff;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-/* =========================================================
-   📊 DASHBOARD CARDS (PRO LEVEL)
-========================================================= */
-.fi-section,
-.fi-card {
-    background: linear-gradient(
-        145deg,
-        #111827,
-        #0f172a
-    );
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    transition: all 0.25s ease;
-}
-
-.fi-section:hover,
-.fi-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-}
-
-/* =========================================================
-   📝 TEXT HIERARCHY
-========================================================= */
-.text-secondary {
-    color: var(--text-secondary);
-}
-
-.text-muted {
-    color: var(--text-muted);
-}
-
-/* =========================================================
-   📥 INPUTS
-========================================================= */
-.fi-input {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 0.75rem;
-    color: var(--text-primary);
-    padding: 0.75rem 1rem;
-    transition: all 0.25s ease;
-}
-
-.fi-input::placeholder {
-    color: var(--text-muted);
-}
-
-.fi-input:focus {
-    border-color: var(--primary-light);
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
-}
-
-/* =========================================================
-   🔘 BUTTONS (UMK STYLE)
-========================================================= */
-.fi-btn-primary {
-    background: linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-dark)
-    );
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: all 0.25s ease;
-    box-shadow: 0 5px 20px rgba(30,58,138,0.4);
-}
-
-.fi-btn-primary:hover {
-    transform: translateY(-1px);
-    background: linear-gradient(
-        135deg,
-        var(--primary-light),
-        var(--primary)
-    );
-}
-
-/* =========================================================
-   🏷️ STATUS COLORS (CONSISTENT SYSTEM)
-========================================================= */
-.text-success {
-    color: var(--success);
-}
-
-.text-warning {
-    color: var(--warning);
-}
-
-.text-danger {
-    color: var(--danger);
-}
-
-/* =========================================================
-   🔐 LOGIN PAGE (PROFESSIONAL + CLEAN)
-========================================================= */
-.fi-simple-layout {
-    min-height: 100vh;
-    background: radial-gradient(
-        circle at top left,
-        #1e3a8a 0%,
-        #0b1120 60%
-    );
-    position: relative;
-}
-
-/* Overlay */
-.fi-simple-layout::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(11,17,32,0.3),
-        rgba(11,17,32,0.85)
-    );
-    backdrop-filter: blur(2px);
-}
-
-/* Container */
-.fi-simple-main-ctn {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Login Card */
-.fi-simple-main {
-    width: 420px;
-    background: rgba(17,24,39,0.85);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 1.25rem;
-    padding: 2.5rem;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-}
-
-/* Headings */
-.fi-simple-main h2 {
-    color: #ffffff;
-    font-size: 1.75rem;
-    font-weight: 700;
-}
-
-.fi-simple-main p {
-    color: var(--text-secondary);
-}
-
-/* Links */
-.fi-simple-main a {
-    color: var(--accent);
-}
-
-.fi-simple-main a:hover {
-    opacity: 0.8;
-}
-
-/* Hide default header */
-.fi-simple-layout .fi-simple-header {
-    display: none;
+.fi-simple-main .fi-input-wrp:focus-within {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-color: #2A9D8F !important;
+    box-shadow: 0 0 0 3px rgba(42,157,143,0.3) !important;
 }

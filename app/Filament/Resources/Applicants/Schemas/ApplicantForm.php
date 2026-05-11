@@ -70,6 +70,13 @@ class ApplicantForm
                         ->disabled(fn($record) => $record?->status === 'Approved')
                         ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
                         ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
+                    Select::make('intake_session')
+                        ->label('Intake Session')
+                        ->options(fn() => self::intakeSessionOptions())
+                        ->required()
+                        ->disabled(fn($record) => $record?->status === 'Approved')
+                        ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
+                        ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
                     Textarea::make('prev_edu')
                         ->label('Previous Education')
                         ->columnSpanFull()
@@ -126,8 +133,21 @@ class ApplicantForm
                         ->defaultItems(0)
                         ->disabled(fn($record) => $record?->status === 'Approved'),
                 ]),
-
-                
         ]);
+    }
+
+    protected static function intakeSessionOptions(): array
+    {
+        $options = [];
+        $startYear = 2020;
+        $endYear = now()->year + 5;
+
+        for ($year = $startYear; $year <= $endYear; $year++) {
+            $next = $year + 1;
+            $key = "{$year}/{$next}";
+            $options[$key] = $key;
+        }
+
+        return $options;
     }
 }

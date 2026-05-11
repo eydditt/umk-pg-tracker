@@ -9,7 +9,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-
+use Illuminate\Support\HtmlString;
 class EditApplicant extends EditRecord
 {
     protected static string $resource = ApplicantResource::class;
@@ -60,6 +60,7 @@ class EditApplicant extends EditRecord
                     StudentProgress::create([
                         'student_id'      => $student->id,
                         'eng_test_status' => $engStatus,
+                        'intake_session' => $record->intake_session,
                     ]);
 
                     Notification::make()
@@ -97,9 +98,10 @@ class EditApplicant extends EditRecord
                 ->color('danger')
                 ->requiresConfirmation()
                 ->modalHeading('Permanently Delete Applicant')
-                ->modalDescription(fn() => $this->record->status === 'Approved'
-                    ? '⚠️ WARNING: This applicant has an active student record. Deleting this will also permanently delete the student record and all progress data. This cannot be undone!'
-                    : 'Are you sure? This record will be permanently removed from the system.')
+                ->modalDescription(new HtmlString(
+                        'Are you sure you want to delete this applicant? This action is irreversible, and the record will be permanently removed from the system.<br><br>
+                        <strong>⚠️ Note:</strong> If the applicant has already become a student, their student record will also be affected.'
+                    ))
                 ->visible(fn() => true)
                 ->action(function() {
                     if ($this->record->student) {

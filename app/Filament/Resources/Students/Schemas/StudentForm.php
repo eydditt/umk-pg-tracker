@@ -54,15 +54,11 @@ class StudentForm
                         ->options(['Master' => 'Master', 'PhD' => 'PhD'])
                         ->required()
                         ->dehydrated(true),
-                    Select::make('payment_method')
-                        ->label('Payment Method')
-                        ->options([
-                            'Scholarship' => 'Scholarship',
-                            'Self-funded'  => 'Self-funded',
-                            'Other'        => 'Other',
-                        ])
+                    Select::make('intake_session')
+                        ->label('Intake Session')
+                        ->options(fn() => self::intakeSessionOptions())
                         ->required()
-                        ->dehydrated(true),
+                        ->dehydrated(true),                        
                     Select::make('status')
                         ->label('Student Status')
                         ->options([
@@ -204,23 +200,24 @@ class StudentForm
                         ])])->collapsible()->collapsed(),
 
                     Section::make('Financial Status')->schema([
-                        Select::make('progress.scholarship_status')
-                            ->label('Scholarship Status')
-                            ->options([
-                                'Not Applicable' => 'Not Applicable',
-                                'Pending'        => 'Pending',
-                                'Approved'       => 'Approved',
-                                'Rejected'       => 'Rejected',
-                            ])->dehydrated(true),
-                        Select::make('progress.tuition_fee_status')
-                            ->label('Tuition Fee Status')
-                            ->options([
-                                'Pending' => 'Pending',
-                                'Paid'    => 'Paid',
-                                'Partial' => 'Partial',
-                                'Waived'  => 'Waived',
-                            ])->dehydrated(true),
-                    ])->columns(2),
+                            Select::make('payment_method')
+                                ->label('Payment Method')
+                                ->options([
+                                    'Scholarship' => 'Scholarship',
+                                    'Self-funded'  => 'Self-funded',
+                                    'Other'        => 'Other',
+                                ])
+                                ->required()
+                                ->dehydrated(true),
+                            Select::make('progress.scholarship_status')
+                                ->label('Scholarship Status')
+                                ->options([
+                                    'Not Applicable' => 'Not Applicable',
+                                    'Pending'        => 'Pending',
+                                    'Approved'       => 'Approved',
+                                    'Rejected'       => 'Rejected',
+                                ])->dehydrated(true),
+                        ])->columns(2),
 
                     self::gdriveRepeater('gdrive_p05', 'P05'),
                 ]),
@@ -307,4 +304,19 @@ class StudentForm
             ->label('')
             ->content($list);
     }
+
+    protected static function intakeSessionOptions(): array
+        {
+            $options = [];
+            $startYear = 2020;
+            $endYear = now()->year + 5;
+
+            for ($year = $startYear; $year <= $endYear; $year++) {
+                $next = $year + 1;
+                $key = "{$year}/{$next}";
+                $options[$key] = $key;
+            }
+
+            return $options;
+        }
 }

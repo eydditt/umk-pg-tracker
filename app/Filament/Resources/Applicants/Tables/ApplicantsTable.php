@@ -45,10 +45,10 @@ class ApplicantsTable
                         'Rejected' => 'danger',
                         default    => 'gray',
                     }),
-                TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->date()
-                    ->sortable(),
+                TextColumn::make('intake_session')
+                    ->label('Intake')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                     SelectFilter::make('status')
@@ -112,7 +112,7 @@ class ApplicantsTable
                 Action::make('reject')
                     ->label('Reject')
                     ->icon('heroicon-o-x-circle')
-                    ->color('danger')
+                    ->color('warning')
                     ->requiresConfirmation()
                     ->modalHeading('Reject Applicant')
                     ->modalDescription('This applicant will be marked as Rejected and kept in the system for record purposes.')
