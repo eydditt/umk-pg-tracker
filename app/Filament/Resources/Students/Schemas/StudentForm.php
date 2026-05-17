@@ -203,6 +203,7 @@ class StudentForm
                             Select::make('payment_method')
                                 ->label('Payment Method')
                                 ->options([
+                                    'Not-stated' => 'Not-stated',
                                     'Scholarship' => 'Scholarship',
                                     'Self-funded'  => 'Self-funded',
                                     'Other'        => 'Other',

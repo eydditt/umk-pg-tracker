@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class StudentsTable
 {
@@ -62,10 +63,36 @@ class StudentsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                \Filament\Actions\Action::make('delete')
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Permanently Delete Student')
+                    ->modalDescription(new HtmlString(
+                        'Are you sure you want to delete this student? This action is irreversible and the student record will be permanently removed from the system.<br><br>
+                        <strong>⚠️ Note:</strong> The applicant record linked to this student will remain in the system for reference purposes. Only the student and progress data will be deleted.'
+                    ))
+                    ->modalSubmitActionLabel('Yes, Delete')
+                    ->action(function($record) {
+                        $record->progress()->delete();
+                        $record->forceDelete();
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Student permanently deleted.')
+                            ->warning()
+                            ->send();
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
+                        ->modalHeading('Permanently Delete Selected Students')
+                        ->modalDescription(new HtmlString(
+                            'Are you sure you want to delete the selected students? This action is irreversible and all student records will be permanently removed from the system.<br><br>
+                            <strong>⚠️ Note:</strong> The applicant record linked to this student will remain in the system for reference purposes. Only the student and progress data will be deleted.'
+                        ))
+                        ->modalSubmitActionLabel('Yes, Delete All')
                         ->action(fn($records) => $records->each->forceDelete()),
                 ]),
             ]);

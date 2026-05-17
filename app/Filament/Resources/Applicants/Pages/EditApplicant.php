@@ -50,8 +50,9 @@ class EditApplicant extends EditRecord
                         'program_type'           => $record->program_applied,
                         'email'                  => $record->email,
                         'gender'                 => $record->gender,
+                        'nationality_type'       => $record->identity_type === 'IC' ? 'Local' : 'International',
                         'application_docs_links' => $record->application_docs_links,
-                        'payment_method'         => 'Self-funded',
+                        'payment_method'         => 'Not-stated',
                         'status'                 => 'Active',
                     ]);
 

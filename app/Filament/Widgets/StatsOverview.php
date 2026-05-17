@@ -11,14 +11,17 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends StatsOverviewWidget
 {
+    protected static ?int $sort = 2;
+    protected int | string | array $columnSpan = 'full';
+
     protected function getStats(): array
     {
-        $totalStudents    = Student::count();
-        $graduated        = Student::where('status', 'Completed')->count();
-        $unsupervised     = Student::whereNull('main_sv_id')->count();
-        $pendingEnglish   = StudentProgress::where('eng_test_status', 'Pending')->count();
-        $unsupervisedPct  = $totalStudents > 0 ? round(($unsupervised / $totalStudents) * 100) : 0;
-        $pendingEngPct    = $totalStudents > 0 ? round(($pendingEnglish / $totalStudents) * 100) : 0;
+        $totalStudents   = Student::count();
+        $graduated       = Student::where('status', 'Completed')->count();
+        $unsupervised    = Student::whereNull('main_sv_id')->count();
+        $pendingEnglish  = StudentProgress::where('eng_test_status', 'Pending')->count();
+        $unsupervisedPct = $totalStudents > 0 ? round(($unsupervised / $totalStudents) * 100) : 0;
+        $pendingEngPct   = $totalStudents > 0 ? round(($pendingEnglish / $totalStudents) * 100) : 0;
 
         return [
             Stat::make('Applicants', Applicant::where('status', 'Pending')->count())

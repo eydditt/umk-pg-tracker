@@ -8,9 +8,9 @@ class Student extends Model
 {
     protected $fillable = [
     'applicant_id', 'matric_no', 'email', 'application_docs_links',
-    'program_type', 'intake_session', 'gender', 'payment_method',
-    'main_sv_id', 'co_sv_id', 'status',
-    ];
+    'program_type', 'intake_session', 'gender', 'nationality_type',
+    'payment_method', 'main_sv_id', 'co_sv_id', 'status',
+];
 
     protected $casts = [
         'application_docs_links' => 'array',

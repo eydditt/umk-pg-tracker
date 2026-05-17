@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\Students\Pages;
 
 use App\Filament\Resources\Students\StudentResource;
-use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\HtmlString;
 
 class EditStudent extends EditRecord
 {
@@ -13,7 +15,28 @@ class EditStudent extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            Action::make('delete')
+                ->label('Delete Student')
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading('Permanently Delete Student')
+                ->modalDescription(new HtmlString(
+                    'Are you sure you want to delete this student? This action is irreversible and the student record will be permanently removed from the system.<br><br>
+                    <strong>⚠️ Note:</strong> The applicant record linked to this student will remain in the system for reference purposes. Only the student and progress data will be deleted.'
+                ))
+                ->modalSubmitActionLabel('Yes, Delete')
+                ->action(function() {
+                    $this->record->progress()->delete();
+                    $this->record->forceDelete();
+
+                    Notification::make()
+                        ->title('Student permanently deleted.')
+                        ->warning()
+                        ->send();
+
+                    $this->redirect($this->getResource()::getUrl('index'));
+                }),
         ];
     }
 
@@ -50,7 +73,6 @@ class EditStudent extends EditRecord
     {
         $progressData = $this->data['progress'] ?? [];
 
-        // Gabungkan semua gdrive links dari setiap phase
         $allLinks = [];
         foreach (['p01', 'p02', 'p03', 'p04', 'p05', 'p06', 'p07'] as $phase) {
             $links = $this->data['gdrive_' . $phase] ?? [];
@@ -63,26 +85,24 @@ class EditStudent extends EditRecord
             }
         }
 
-        // Save progress
         $this->record->progress()->updateOrCreate(
             ['student_id' => $this->record->id],
             [
-                'eng_test_status'          => $progressData['eng_test_status'] ?? 'Pending',
-                'research_method'          => $progressData['research_method'] ?? 'Pending',
-                'pd_status'                => $progressData['pd_status'] ?? 'Pending',
-                'pre_viva_status'          => $progressData['pre_viva_status'] ?? 'Pending',
-                'viva_status'              => $progressData['viva_status'] ?? 'Pending',
-                'scholarship_status'       => $progressData['scholarship_status'] ?? 'Not Applicable',
-                'tuition_fee_status'       => $progressData['tuition_fee_status'] ?? 'Pending',
-                'progress_report_status'   => $progressData['progress_report_status'] ?? 'Pending',
-                'last_progress_report_date'=> $progressData['last_progress_report_date'] ?? null,
+                'eng_test_status'            => $progressData['eng_test_status'] ?? 'Pending',
+                'research_method'            => $progressData['research_method'] ?? 'Pending',
+                'pd_status'                  => $progressData['pd_status'] ?? 'Pending',
+                'pre_viva_status'            => $progressData['pre_viva_status'] ?? 'Pending',
+                'viva_status'                => $progressData['viva_status'] ?? 'Pending',
+                'scholarship_status'         => $progressData['scholarship_status'] ?? 'Not Applicable',
+                'tuition_fee_status'         => $progressData['tuition_fee_status'] ?? 'Pending',
+                'progress_report_status'     => $progressData['progress_report_status'] ?? 'Pending',
+                'last_progress_report_date'  => $progressData['last_progress_report_date'] ?? null,
                 'degree_verification_status' => $progressData['degree_verification_status'] ?? 'Pending',
-                'graduation_date'          => $progressData['graduation_date'] ?? null,
-                'gdrive_links'             => $allLinks,
+                'graduation_date'            => $progressData['graduation_date'] ?? null,
+                'gdrive_links'               => $allLinks,
             ]
         );
 
-        // Save student fields
         $this->record->update([
             'email'          => $this->data['email'] ?? $this->record->email,
             'gender'         => $this->data['gender'] ?? $this->record->gender,
@@ -94,13 +114,13 @@ class EditStudent extends EditRecord
             'co_sv_id'       => $this->data['co_sv_id'] ?? null,
         ]);
 
-        // Sync back to applicant
         if ($this->record->applicant) {
             $this->record->applicant->update([
-                'eng_test' => $this->data['eng_test'] ?? $this->record->applicant->eng_test,
-                'prev_edu' => $this->data['applicant_prev_edu'] ?? $this->record->applicant->prev_edu,
-                'gender'   => $this->data['gender'] ?? $this->record->applicant->gender,
-                'email'    => $this->data['email'] ?? $this->record->applicant->email,
+                'eng_test'       => $this->data['eng_test'] ?? $this->record->applicant->eng_test,
+                'prev_edu'       => $this->data['applicant_prev_edu'] ?? $this->record->applicant->prev_edu,
+                'gender'         => $this->data['gender'] ?? $this->record->applicant->gender,
+                'email'          => $this->data['email'] ?? $this->record->applicant->email,
+                'intake_session' => $this->data['intake_session'] ?? $this->record->intake_session,
             ]);
         }
     }

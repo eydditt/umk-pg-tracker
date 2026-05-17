@@ -1,0 +1,17 @@
+[90m= [39m[
+    [34m"[39m[34mid[39m[34m"[39m => [35m42[39m,
+    [34m"[39m[34mapplicant_id[39m[34m"[39m => [35m61[39m,
+    [34m"[39m[34memail[39m[34m"[39m => [32m"[39m[32mstudent20@gmail.com[39m[32m"[39m,
+    [34m"[39m[34mapplication_docs_links[39m[34m"[39m => [36mnull[39m,
+    [34m"[39m[34mmatric_no[39m[34m"[39m => [32m"[39m[32mee[39m[32m"[39m,
+    [34m"[39m[34mprogram_type[39m[34m"[39m => [32m"[39m[32mPhD[39m[32m"[39m,
+    [34m"[39m[34mintake_session[39m[34m"[39m => [36mnull[39m,
+    [34m"[39m[34mgender[39m[34m"[39m => [32m"[39m[32mFemale[39m[32m"[39m,
+    [34m"[39m[34mnationality_type[39m[34m"[39m => [32m"[39m[32mLocal[39m[32m"[39m,
+    [34m"[39m[34mpayment_method[39m[34m"[39m => [32m"[39m[32mNot-stated[39m[32m"[39m,
+    [34m"[39m[34mmain_sv_id[39m[34m"[39m => [36mnull[39m,
+    [34m"[39m[34mco_sv_id[39m[34m"[39m => [36mnull[39m,
+    [34m"[39m[34mstatus[39m[34m"[39m => [32m"[39m[32mActive[39m[32m"[39m,
+    [34m"[39m[34mcreated_at[39m[34m"[39m => [32m"[39m[32m2026-05-12T07:54:26.000000Z[39m[32m"[39m,
+    [34m"[39m[34mupdated_at[39m[34m"[39m => [32m"[39m[32m2026-05-12T08:01:37.000000Z[39m[32m"[39m,
+  ]

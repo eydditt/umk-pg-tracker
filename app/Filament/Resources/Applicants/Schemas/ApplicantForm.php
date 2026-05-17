@@ -59,7 +59,7 @@ class ApplicantForm
                         ->label('Identity Number')
                         ->required()
                         ->unique(ignoreRecord: true)
-                        ->hint(fn($get, $record) => $record?->status === 'Approved' ? 'Locked' : ($get('identity_type') === 'IC' ? 'Format: 000000000000 (without -)' : null))
+                        ->hint(fn($get, $record) => $record?->status === 'Approved' ? 'Locked' : ($get('identity_type') === 'IC' ? 'Format: (without -)' : null))
                         ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
                         ->live()
                         ->disabled(fn($record) => $record?->status === 'Approved'),

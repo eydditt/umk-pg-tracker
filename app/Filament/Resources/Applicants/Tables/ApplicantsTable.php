@@ -9,11 +9,13 @@ use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\HtmlString;
 
 class ApplicantsTable
@@ -146,10 +148,16 @@ class ApplicantsTable
                     }),
                             ])
             ->toolbarActions([
-                    BulkActionGroup::make([
-                        DeleteBulkAction::make()
-                            ->action(fn($records) => $records->each->forceDelete()),
-                    ]),
-                ]);
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->modalHeading('Permanently Delete Selected Applicants')
+                        ->modalDescription(new HtmlString(
+                            'Are you sure you want to delete the selected applicants? This action is irreversible, and all records will be permanently removed from the system.<br><br>
+                            <strong>⚠️ Note:</strong> If any applicant has already become a student, their student record will also be affected.'
+                        ))
+                        ->modalSubmitActionLabel('Yes, Delete All')
+                        ->action(fn($records) => $records->each->forceDelete()),
+                ]),
+            ]);
     }
 }
