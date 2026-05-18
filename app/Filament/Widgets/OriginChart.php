@@ -21,7 +21,7 @@ class OriginChart extends ChartWidget
                     Student::where('nationality_type', 'Local')->count(),
                     Student::where('nationality_type', 'International')->count(),
                 ],
-                'backgroundColor' => ['#E9C46A', '#264653'],
+                'backgroundColor' => ['#71eeff', '#1E3A8A'],
             ]],
             'labels' => ['Local', 'International'],
         ];

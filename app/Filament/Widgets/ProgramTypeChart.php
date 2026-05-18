@@ -21,7 +21,7 @@ class ProgramTypeChart extends ChartWidget
                     Student::where('program_type', 'PhD')->count(),
                     Student::where('program_type', 'Master')->count(),
                 ],
-                'backgroundColor' => ['#7C3AED', '#0891B2'],
+                'backgroundColor' => ['#1E3A8A', '#71eeff'],
             ]],
             'labels' => ['PhD', 'Master'],
         ];

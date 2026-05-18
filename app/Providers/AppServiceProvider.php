@@ -39,8 +39,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
          FilamentColor::register([
-        'phd' => Color::hex('#7C3AED'),
-        'master' => Color::hex('#0891B2'),
+        'phd' => Color::hex('#1E3A8A'),
+        'master' => Color::hex('#71eeff'),
         
     ]);
     }

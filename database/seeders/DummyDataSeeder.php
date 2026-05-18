@@ -16,28 +16,30 @@ class DummyDataSeeder extends Seeder
         // Panggil Faker dengan setting nama orang Malaysia!
         $faker = Faker::create('ms_MY');
 
-        // ── 1. LECTURERS (Sifu kekalkan nama-nama sedia ada) ──
-        $lecturers = [
-            ['staff_no' => 'STF001', 'full_name' => 'Dr. Ahmad Fauzi bin Ismail'],
-            ['staff_no' => 'STF002', 'full_name' => 'Dr. Siti Nur Aisyah binti Zakaria'],
-            ['staff_no' => 'STF003', 'full_name' => 'Prof. Madya Dr. Mohd Hafiz bin Abdullah'],
-            ['staff_no' => 'STF004', 'full_name' => 'Dr. Nurul Huda binti Rahman'],
-            ['staff_no' => 'STF005', 'full_name' => 'Dr. Khairul Anwar bin Mohamad'],
-        ];
+        $this->command->info('Bertenang... Sifu tengah jana 30 Pensyarah dan 350 Pelajar!');
 
-        foreach ($lecturers as $l) {
-            Lecturer::firstOrCreate(['staff_no' => $l['staff_no']], $l);
+        // ── 1. JANA 30 LECTURERS (SUPERVISORS) ──
+        $titles = ['Dr.', 'Prof. Madya Dr.', 'Prof. Dr.', 'Ts. Dr.'];
+        $lecIds = [];
+        
+        for ($i = 1; $i <= 30; $i++) {
+            $lecturer = Lecturer::create([
+                'staff_no'  => 'UMK' . $faker->unique()->numerify('####'),
+                'full_name' => $faker->randomElement($titles) . ' ' . $faker->name,
+            ]);
+            $lecIds[] = $lecturer->id;
         }
 
-        // Ambil senarai ID pensyarah untuk diagihkan kepada pelajar nanti
-        $lecIds = Lecturer::pluck('id')->toArray();
-
-        // ── 2. JANA 50 APPLICANTS YANG DILULUSKAN (JADI STUDENT) ──
+        // ── 2. SENARAI 10 TAHUN INTAKE SESSION (2017 - 2027) ──
         $programs = ['Master', 'PhD'];
-        $intakes = ['2023/2024', '2024/2025', '2025/2026'];
+        $intakes = [
+            '2017/2018', '2018/2019', '2019/2020', '2020/2021', '2021/2022', 
+            '2022/2023', '2023/2024', '2024/2025', '2025/2026', '2026/2027'
+        ];
         $paymentMethods = ['Scholarship', 'Self-funded', 'Other', 'Not-stated'];
         
-        for ($i = 1; $i <= 50; $i++) {
+        // ── 3. JANA 350 APPLICANTS YANG DILULUSKAN (JADI STUDENT) ──
+        for ($i = 1; $i <= 350; $i++) {
             $gender = $faker->randomElement(['Male', 'Female']);
             $isLocal = $faker->boolean(80); // 80% pelajar tempatan
             $program = $faker->randomElement($programs);
@@ -55,13 +57,22 @@ class DummyDataSeeder extends Seeder
                 'identity_no'     => $isLocal ? $faker->numerify('##########') : $faker->bothify('?########'),
                 'program_applied' => $program,
                 'intake_session'  => $faker->randomElement($intakes),
-                'prev_edu'        => 'Bachelor of ' . $faker->jobTitle . ', ' . $faker->company,
+                'prev_edu'        => 'Bachelor of ' . $faker->jobTitle,
                 'eng_test_taken'  => $engTestTaken,
                 'eng_test'        => $engTestTaken === 'Taken' ? $faker->randomElement(['IELTS 6.0', 'MUET Band 4', 'MUET Band 5']) : null,
                 'status'          => 'Approved',
             ]);
 
-            $studentStatus = $faker->randomElement(['Active', 'Active', 'Active', 'Completed', 'Deferred']);
+            // Pelajar ada pelbagai status
+            $studentStatus = $faker->randomElement(
+                array_fill(0, 60, 'Active') + 
+                array_fill(60, 25, 'Completed') + 
+                array_fill(85, 10, 'Deferred') + 
+                array_fill(95, 5, 'Terminated')
+            );
+
+            // 10% pelajar tiada SV (Unsupervised)
+            $isUnsupervised = $faker->boolean(10);
 
             $student = Student::create([
                 'applicant_id'           => $applicant->id,
@@ -72,30 +83,32 @@ class DummyDataSeeder extends Seeder
                 'gender'                 => $gender,
                 'nationality_type'       => $isLocal ? 'Local' : 'International',
                 'payment_method'         => $faker->randomElement($paymentMethods),
-                'main_sv_id'             => $mainSv,
-                'co_sv_id'               => $coSv,
+                'main_sv_id'             => $isUnsupervised ? null : $mainSv,
+                'co_sv_id'               => $isUnsupervised ? null : $coSv,
                 'status'                 => $studentStatus,
                 'application_docs_links' => [],
             ]);
 
+            $isCompleted = ($studentStatus === 'Completed');
+
             StudentProgress::create([
                 'student_id'                 => $student->id,
                 'eng_test_status'            => $engTestTaken === 'Taken' ? 'Passed' : 'Pending',
-                'research_method'            => $faker->randomElement(['Pending', 'Passed']),
-                'pd_status'                  => $faker->randomElement(['Pending', 'Passed', 'Minor Correction']),
-                'pre_viva_status'            => $faker->randomElement(['Pending', 'Passed']),
-                'viva_status'                => $faker->randomElement(['Pending', 'Passed']),
+                'research_method'            => $isCompleted ? 'Passed' : $faker->randomElement(['Pending', 'Passed']),
+                'pd_status'                  => $isCompleted ? 'Passed' : $faker->randomElement(['Pending', 'Passed', 'Minor Correction']),
+                'pre_viva_status'            => $isCompleted ? 'Passed' : $faker->randomElement(['Pending', 'Passed']),
+                'viva_status'                => $isCompleted ? 'Passed' : $faker->randomElement(['Pending', 'Passed']),
                 'scholarship_status'         => $faker->randomElement(['Pending', 'Approved', 'Not Applicable']),
                 'tuition_fee_status'         => $faker->randomElement(['Pending', 'Paid']),
                 'progress_report_status'     => $faker->randomElement(['Pending', 'Submitted', 'Approved']),
                 'last_progress_report_date'  => $faker->optional()->date(),
-                'degree_verification_status' => $studentStatus === 'Completed' ? 'Awarded' : 'Pending',
-                'graduation_date'            => $studentStatus === 'Completed' ? $faker->date() : null,
+                'degree_verification_status' => $isCompleted ? 'Awarded' : 'Pending',
+                'graduation_date'            => $isCompleted ? $faker->date() : null,
             ]);
         }
 
-        // ── 3. JANA 20 PENDING / REJECTED APPLICANTS ──
-        for ($i = 1; $i <= 20; $i++) {
+        // ── 4. JANA 50 PENDING / REJECTED APPLICANTS ──
+        for ($i = 1; $i <= 50; $i++) {
             $gender = $faker->randomElement(['Male', 'Female']);
             $isLocal = $faker->boolean(90);
             

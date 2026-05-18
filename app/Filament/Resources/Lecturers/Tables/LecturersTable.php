@@ -6,9 +6,10 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class LecturersTable
 {
@@ -41,12 +42,27 @@ class LecturersTable
                     ->color('danger')
                     ->requiresConfirmation()
                     ->modalHeading('Delete Lecturer')
-                    ->modalDescription('Are you sure? This lecturer will be permanently deleted.')
+                    ->modalDescription(fn($record) => new HtmlString(
+                        'Are you sure you want to permanently delete <strong>' . e($record->full_name) . '</strong>?
+                        This action is irreversible.<br><br>
+                        <strong>⚠️ Impact on Students:</strong><br>
+                        This lecturer is currently supervising <strong>' . $record->mainStudents()->count() . ' student(s)</strong>.
+                        Deleting this lecturer will <strong>remove them as main supervisor</strong> from all related student records.
+                        Affected students will appear as <em>unsupervised</em> and will need to be reassigned manually.<br><br>
+                        <strong>⚠️ Co-supervision:</strong><br>
+                        Any co-supervision roles held by this lecturer will also be removed from student records.'
+                    ))
                     ->action(function($record) {
+                        $record->mainStudents()->update(['main_sv_id' => null]);
+
+                        if (method_exists($record, 'coStudents')) {
+                            $record->coStudents()->update(['co_sv_id' => null]);
+                        }
+
                         $record->forceDelete();
 
                         Notification::make()
-                            ->title('Lecturer permanently deleted.')
+                            ->title('Lecturer permanently deleted. Affected students are now unsupervised.')
                             ->warning()
                             ->send();
                     }),

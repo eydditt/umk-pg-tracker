@@ -42,6 +42,14 @@ class DashboardReportController extends Controller
         $viva_completed       = StudentProgress::where('viva_status', 'Passed')->count();
         $degree_verified      = StudentProgress::whereIn('degree_verification_status', ['Verified', 'Awarded'])->count();
 
+        $passed_rm = StudentProgress::whereHas('student', function($q) {
+                $q->where('status', 'Active');
+             })->where('research_method', 'Passed')->count();
+
+        $passed_pd = StudentProgress::whereHas('student', function($q) {
+                        $q->where('status', 'Active');
+                    })->where('pd_status', 'Passed')->count();
+
         $top_supervisors = Lecturer::withCount('mainStudents')
             ->orderByDesc('main_students_count')
             ->limit(8)
@@ -53,7 +61,7 @@ class DashboardReportController extends Controller
             ->orderBy('intake_session')
             ->get();
 
-        $generated_at = now()->format('d M Y, h:i A');
+        $generated_at = now('Asia/Kuala_Lumpur')->format('d M Y, h:i A');
 
         $data = compact(
             'total_students', 'active_students', 'completed_students',
@@ -62,8 +70,8 @@ class DashboardReportController extends Controller
             'pending_english', 'phd_students', 'master_students',
             'male_students', 'female_students', 'local_students',
             'international_students', 'payment_scholarship', 'payment_self',
-            'payment_other', 'payment_not_stated', 'passed_english',
-            'pre_viva_completed', 'viva_completed', 'degree_verified',
+            'payment_other', 'payment_not_stated',
+            'passed_rm', 'passed_pd', 'pre_viva_completed', 'viva_completed',  
             'top_supervisors', 'intake_data', 'generated_at'
         );
 
@@ -79,7 +87,7 @@ class DashboardReportController extends Controller
                 'enable_css_float'     => true,
             ]);
 
-        $filename = 'UMK-PG-Dashboard-Report-' . now()->format('Y-m-d') . '.pdf';
+        $filename = 'UMK-PG-Dashboard-Report-' . now('Asia/Kuala_Lumpur')->format('Y-m-d') . '.pdf';
 
         return $pdf->download($filename);
     }

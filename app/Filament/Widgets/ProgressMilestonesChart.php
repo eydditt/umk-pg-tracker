@@ -8,27 +8,41 @@ use Filament\Widgets\ChartWidget;
 class ProgressMilestonesChart extends ChartWidget
 {
     protected static ?int $sort = 7;
-    protected ?string $heading = 'Progress Milestones Overview';
-    protected ?string $maxHeight = '300px';
+    protected ?string $heading = 'Progress Milestones Overview (Active-Student)';
+    // ❌ Sifu dah BUANG baris $maxHeight kat sini
     protected int | string | array $columnSpan = 2;
 
     protected function getData(): array
     {
-        $completed = fn($col) => StudentProgress::where($col, 'Completed')->count();
-
         $milestones = [
-            'English Test'    => $completed('eng_test_status'),
-            'Pre-Viva'        => $completed('pre_viva_status'),
-            'Viva'            => $completed('viva_status'),
-            'Degree Verified' => $completed('degree_verification_status'),
+            'Research-Method'       => StudentProgress::whereHas('student', function($q) { 
+                                    $q->where('status', 'Active'); 
+                                 })->where('research_method', 'Passed')->count(),
+                                 
+            'Proposal-Defense'       => StudentProgress::whereHas('student', function($q) { 
+                                    $q->where('status', 'Active'); 
+                                 })->where('pd_status', 'Passed')->count(),
+                                 
+            'Pre-Viva' => StudentProgress::whereHas('student', function($q) { 
+                                    $q->where('status', 'Active'); 
+                                 })->where('pre_viva_status', 'Passed')->count(),
+                                 
+            'Viva'     => StudentProgress::whereHas('student', function($q) { 
+                                    $q->where('status', 'Active'); 
+                                 })->where('viva_status', 'Passed')->count(), 
         ];
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Completed',
+                    'label' => 'Total Active Students',
                     'data' => array_values($milestones),
-                    'backgroundColor' => ['#2A9D8F', '#7C3AED', '#E9C46A', '#E76F51'],
+                    'backgroundColor' => [
+                        'rgba(42, 157, 143, 0.8)',   // Teal (RM)
+                        'rgba(124, 58, 237, 0.8)',   // Purple (PD)
+                        'rgba(233, 196, 106, 0.8)',  // Yellow (Pre-Viva)
+                        'rgba(231, 111, 81, 0.8)'    // Orange (Viva)
+                    ],
                 ],
             ],
             'labels' => array_keys($milestones),
@@ -37,6 +51,28 @@ class ProgressMilestonesChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'bar';
+        return 'polarArea';
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'maintainAspectRatio' => false, // ✅ SIFU TAMBAH KAT SINI
+            'plugins' => [
+                'legend' => [
+                    'display' => true,
+                    'position' => 'bottom',
+                ],
+            ],
+            'scales' => [
+                'r' => [
+                    'ticks' => [
+                        'stepSize' => 1,
+                        'precision' => 0,
+                        'backdropColor' => 'transparent'
+                    ],
+                ],
+            ],
+        ];
     }
 }

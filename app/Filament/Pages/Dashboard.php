@@ -21,9 +21,10 @@ class Dashboard extends BaseDashboard
             \App\Filament\Widgets\GenderChart::class,
             \App\Filament\Widgets\OriginChart::class,
             \App\Filament\Widgets\PaymentMethodChart::class,
+            \App\Filament\Widgets\IntakeTrendChart::class,
             \App\Filament\Widgets\ProgressMilestonesChart::class,
             \App\Filament\Widgets\TopSupervisorChart::class,
-            \App\Filament\Widgets\IntakeTrendChart::class,
+            
         ];
     }
 

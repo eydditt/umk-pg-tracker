@@ -21,7 +21,7 @@ class GenderChart extends ChartWidget
                     Student::where('gender', 'Male')->count(),
                     Student::where('gender', 'Female')->count(),
                 ],
-                'backgroundColor' => ['#2A9D8F', '#E76F51'],
+                'backgroundColor' => ['#71eeff', '#1E3A8A'],
             ]],
             'labels' => ['Male', 'Female'],
         ];

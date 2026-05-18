@@ -110,8 +110,10 @@ class EditStudent extends EditRecord
             'payment_method' => $this->data['payment_method'] ?? $this->record->payment_method,
             'intake_session' => $this->data['intake_session'] ?? $this->record->intake_session,
             'status'         => $this->data['status'] ?? $this->record->status,
-            'main_sv_id'     => $this->data['main_sv_id'] ?? null,
-            'co_sv_id'       => $this->data['co_sv_id'] ?? null,
+            
+            // 👇 SIFU TUKAR DUA BARIS NI PAKAI empty() 👇
+            'main_sv_id'     => empty($this->data['main_sv_id']) ? null : $this->data['main_sv_id'],
+            'co_sv_id'       => empty($this->data['co_sv_id']) ? null : $this->data['co_sv_id'],
         ]);
 
         if ($this->record->applicant) {

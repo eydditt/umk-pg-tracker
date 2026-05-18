@@ -12,9 +12,21 @@ class LecturerStats extends StatsOverviewWidget
     protected function getStats(): array
     {
         $totalLecturers = Lecturer::count();
-        $totalSupervising = Lecturer::whereHas('mainStudents')->count();
-        $totalStudentsSupervised = Student::whereNotNull('main_sv_id')->count();
-        $unsupervised = Student::whereNull('main_sv_id')->where('status', 'Active')->count();
+        
+        
+        $totalSupervising = Lecturer::whereHas('mainStudents', function ($query) {
+            $query->where('status', 'Active');
+        })->count();
+        
+     
+        $totalStudentsSupervised = Student::whereNotNull('main_sv_id')
+            ->where('status', 'Active')
+            ->count();
+            
+      
+        $unsupervised = Student::whereNull('main_sv_id')
+            ->where('status', 'Active')
+            ->count();
 
         return [
             Stat::make('Total Lecturers', $totalLecturers)
@@ -23,12 +35,12 @@ class LecturerStats extends StatsOverviewWidget
                 ->color('info'),
 
             Stat::make('Active Supervisors', $totalSupervising)
-                ->description('Lecturers supervising students')
+                ->description('Lecturers supervising active students')
                 ->descriptionIcon('heroicon-o-user-group')
                 ->color('success'),
 
             Stat::make('Students Under Supervision', $totalStudentsSupervised)
-                ->description('Students with Main SV assigned')
+                ->description('Active students with Main SV')
                 ->descriptionIcon('heroicon-o-check-circle')
                 ->color('success'),
 

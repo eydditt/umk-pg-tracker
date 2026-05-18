@@ -4,374 +4,351 @@
 <meta charset="UTF-8">
 <title>UMK PG Tracker — Dashboard Report</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'DejaVu Sans',sans-serif; font-size:9px; color:#1C2B2A; background:#ffffff; }
+    @page { margin: 0px; }
+    
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
+    body { font-family:'Helvetica', Arial, sans-serif; font-size:12px; color:#1C2B2A; background:#ffffff; line-height: 1.45; margin-bottom: 60px; }
 
-/* reusable — only non-color structural styles here */
-.w100  { width:100%; }
-.track { background:#E0ECEA; border-radius:3px; height:6px; margin-top:3px; margin-bottom:7px; }
-.fill  { height:6px; border-radius:3px; }
-.mtrack{ background:#E0ECEA; border-radius:3px; height:5px; margin-top:2px; margin-bottom:5px; }
-.mfill { height:5px; border-radius:3px; }
-.dt    { width:100%; border-collapse:collapse; font-size:8px; }
-.dt th { background:#0D2B28; color:rgba(255,255,255,0.9); padding:5px 8px; text-align:left; font-size:7px; text-transform:uppercase; letter-spacing:0.4px; font-weight:700; }
-.dt td { padding:5px 8px; color:#2C3E3D; border-bottom:1px solid #E8F0EF; }
-.dt .alt td { background:#EFF5F5; }
+    /* Structural styles */
+    .w100  { width:100%; }
+    .track { background:#E0ECEA; border-radius:3px; height:9px; margin-top:6px; margin-bottom:12px; width: 100%; }
+    .fill  { height:9px; border-radius:3px; }
+    .mtrack{ background:#E0ECEA; border-radius:3px; height:8px; margin-top:4px; margin-bottom:9px; width: 100%; }
+    .mfill { height:8px; border-radius:3px; }
+    
+    /* Table styles */
+    .dt    { width:100%; border-collapse:collapse; font-size:11px; margin-top:10px; }
+    .dt th { background:#008080; color:#ffffff; padding:9px 12px; text-align:left; font-size:10px; text-transform:uppercase; font-weight:bold; }
+    .dt td { padding:9px 12px; color:#2C3E3D; border-bottom:1px solid #E8F0EF; }
+    .dt .alt td { background:#F7FAFA; }
+
+    /* Box styles */
+    .card { background-color:#ffffff; border:1px solid #DDE8E7; border-radius:6px; padding:18px; margin-bottom: 16px; }
+    .card-title { font-size:10px; font-weight:bold; color:#008080; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid #E0ECEA; padding-bottom:6px; margin-bottom:14px; }
+    
+    .stat-box { border-radius:6px; padding:18px 12px; text-align:center; border: 1px solid #DDE8E7; }
+    .stat-val { font-size:30px; font-weight:bold; color:#0D2B28; margin-bottom:6px; line-height:1; }
+    .stat-lbl { font-size:9px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+    .stat-sub { font-size:9px; color:#9BB5B3; }
+
+    /* Fixed Footer */
+    .footer {
+        position: fixed; 
+        bottom: 0px; 
+        left: 0px; 
+        right: 0px; 
+        background-color: #008080; 
+        padding: 14px 30px;
+    }
 </style>
 </head>
 <body>
 
-{{-- ══════════════════════════════════════
-     HEADER
-══════════════════════════════════════ --}}
-<div style="background-color:#0D2B28; padding:16px 20px 14px;">
+{{-- HEADER --}}
+<div style="background-color:#008080; padding:28px 30px;">
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td valign="bottom">
-                <div style="font-size:7px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:3px;">
-                    Universiti Malaysia Kelantan &nbsp;&middot;&nbsp; Faculty of Data Science and Computing (FSDK)
+                <div style="font-size:10px; color:#B2DFDB; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px;">
+                    Universiti Malaysia Kelantan &nbsp;|&nbsp; FSDK
                 </div>
-                <div style="font-size:17px; font-weight:700; color:#ffffff; line-height:1.15;">UMK PG Tracker</div>
-                <div style="font-size:8px; color:rgba(255,255,255,0.6); margin-top:3px;">Postgraduate Student Dashboard Report</div>
-                <div style="margin-top:5px;">
-                    <span style="background-color:#2A9D8F; color:#ffffff; font-size:6.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:2px;">
-                        Confidential &nbsp;&middot;&nbsp; Internal Use Only
-                    </span>
-                </div>
+                <div style="font-size:26px; font-weight:bold; color:#ffffff;">UMK PG Tracker</div>
+                <div style="font-size:12px; color:#E0F2F1; margin-top:4px;">Postgraduate Student Dashboard Executive Report</div>
             </td>
-            <td valign="bottom" width="160" style="text-align:right;">
-                <div style="font-size:8px; color:rgba(255,255,255,0.55); line-height:1.7;">
-                    Report Generated<br>
-                    <strong style="color:#ffffff; font-size:9px;">{{ $generated_at }}</strong>
+            <td valign="bottom" align="right">
+                <span style="background-color:#E9C46A; color:#004D4D; font-size:10px; font-weight:bold; text-transform:uppercase; padding:5px 12px; border-radius:4px;">
+                    Confidential Report
+                </span>
+                <div style="font-size:11px; color:#B2DFDB; margin-top:12px;">
+                    Generated on <strong style="color:#ffffff;">{{ $generated_at }}</strong>
                 </div>
             </td>
         </tr>
     </table>
 </div>
-<div style="height:3px; background-color:#2A9D8F;"></div>
-<div style="height:1px; background-color:#E9C46A;"></div>
+<div style="height:4px; background-color:#005959;"></div>
+<div style="height:2px; background-color:#E9C46A;"></div>
 
-{{-- ══════════════════════════════════════
-     PAGE BODY
-══════════════════════════════════════ --}}
-<div style="padding:14px 18px;">
+{{-- BODY --}}
+<div style="padding:24px 30px;">
 
-    {{-- ── SECTION 1: OVERVIEW ── --}}
-    <div style="margin-bottom:8px;">
-        <div style="border-left:3px solid #2A9D8F; padding-left:7px;">
-            <div style="font-size:7px; font-weight:700; color:#2A9D8F; text-transform:uppercase; letter-spacing:1.2px;">Overview Statistics</div>
-            <div style="font-size:7px; color:#8a9a99; margin-top:1px;">Snapshot of current postgraduate programme data</div>
-        </div>
-        <div style="height:1px; background-color:#E8F0EF; margin-top:4px;"></div>
-    </div>
-
-    <table width="100%" cellspacing="5" cellpadding="0" style="border-collapse:separate; margin-bottom:4px;">
+    {{-- SECTION 1: OVERVIEW --}}
+    <h3 style="font-size:14px; color:#008080; margin-bottom:14px; border-bottom: 2px solid #008080; padding-bottom: 4px;">1. OVERVIEW STATISTICS</h3>
+    
+    <table width="100%" cellspacing="10" cellpadding="0" style="margin-left: -10px; width: calc(100% + 20px);">
         <tr>
-            <td width="16%" valign="top">
-                <div style="background-color:#FFFBF0; border:1px solid #DDE8E7; border-top:3px solid #F59E0B; border-radius:5px; padding:10px 8px; text-align:center;">
-                    <div style="font-size:20px; font-weight:700; color:#0D2B28; line-height:1; margin-bottom:4px;">{{ $pending_applicants }}</div>
-                    <div style="font-size:6.5px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">Pending Applicants</div>
-                    <div style="font-size:7px; color:#9BB5B3;">{{ $total_applicants }} total submitted</div>
+            <td width="16%">
+                <div class="stat-box" style="border-top:4px solid #F59E0B; background-color:#FFFDF7;">
+                    <div class="stat-val">{{ $pending_applicants }}</div>
+                    <div class="stat-lbl" style="color:#F59E0B;">Pending Applicants</div>
+                    <div class="stat-sub">{{ $total_applicants }} total</div>
                 </div>
             </td>
-            <td width="16%" valign="top">
-                <div style="background-color:#F0FAF9; border:1px solid #DDE8E7; border-top:3px solid #2A9D8F; border-radius:5px; padding:10px 8px; text-align:center;">
-                    <div style="font-size:20px; font-weight:700; color:#0D2B28; line-height:1; margin-bottom:4px;">{{ $total_students }}</div>
-                    <div style="font-size:6.5px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">Total Students</div>
-                    <div style="font-size:7px; color:#9BB5B3;">{{ $active_students }} active</div>
+            <td width="16%">
+                <div class="stat-box" style="border-top:4px solid #008080; background-color:#F2FCFB;">
+                    <div class="stat-val">{{ $total_students }}</div>
+                    <div class="stat-lbl" style="color:#008080;">Total Students</div>
+                    <div class="stat-sub">{{ $active_students }} active</div>
                 </div>
             </td>
-            <td width="16%" valign="top">
-                <div style="background-color:#F0F6FF; border:1px solid #DDE8E7; border-top:3px solid #3B82F6; border-radius:5px; padding:10px 8px; text-align:center;">
-                    <div style="font-size:20px; font-weight:700; color:#0D2B28; line-height:1; margin-bottom:4px;">{{ $total_lecturers }}</div>
-                    <div style="font-size:6.5px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">Lecturers</div>
-                    <div style="font-size:7px; color:#9BB5B3;">Total registered</div>
+            <td width="16%">
+                <div class="stat-box" style="border-top:4px solid #3B82F6; background-color:#F5F9FF;">
+                    <div class="stat-val">{{ $total_lecturers }}</div>
+                    <div class="stat-lbl" style="color:#3B82F6;">Lecturers</div>
+                    <div class="stat-sub">Registered</div>
                 </div>
             </td>
-            <td width="16%" valign="top">
-                <div style="background-color:#F0FAF5; border:1px solid #DDE8E7; border-top:3px solid #10B981; border-radius:5px; padding:10px 8px; text-align:center;">
-                    <div style="font-size:20px; font-weight:700; color:#0D2B28; line-height:1; margin-bottom:4px;">{{ $completed_students }}</div>
-                    <div style="font-size:6.5px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">Graduated</div>
-                    <div style="font-size:7px; color:#9BB5B3;">Completed program</div>
+            <td width="16%">
+                <div class="stat-box" style="border-top:4px solid #10B981; background-color:#F4FDF9;">
+                    <div class="stat-val">{{ $completed_students }}</div>
+                    <div class="stat-lbl" style="color:#10B981;">Graduated</div>
+                    <div class="stat-sub">Completed</div>
                 </div>
             </td>
-            <td width="16%" valign="top">
-                <div style="background-color:#FFF5F5; border:1px solid #DDE8E7; border-top:3px solid #EF4444; border-radius:5px; padding:10px 8px; text-align:center;">
-                    <div style="font-size:20px; font-weight:700; color:#0D2B28; line-height:1; margin-bottom:4px;">{{ $total_students > 0 ? round(($unsupervised/$total_students)*100) : 0 }}%</div>
-                    <div style="font-size:6.5px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">Unsupervised</div>
-                    <div style="font-size:7px; color:#9BB5B3;">{{ $unsupervised }} without SV</div>
+            <td width="16%">
+                <div class="stat-box" style="border-top:4px solid #EF4444; background-color:#FFF5F5;">
+                    <div class="stat-val">{{ $total_students > 0 ? round(($unsupervised/$total_students)*100) : 0 }}%</div>
+                    <div class="stat-lbl" style="color:#EF4444;">Unsupervised</div>
+                    <div class="stat-sub">{{ $unsupervised }} without SV</div>
                 </div>
             </td>
-            <td width="16%" valign="top">
-                <div style="background-color:#F8F4FF; border:1px solid #DDE8E7; border-top:3px solid #7C3AED; border-radius:5px; padding:10px 8px; text-align:center;">
-                    <div style="font-size:20px; font-weight:700; color:#0D2B28; line-height:1; margin-bottom:4px;">{{ $total_students > 0 ? round(($pending_english/$total_students)*100) : 0 }}%</div>
-                    <div style="font-size:6.5px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">Pending English</div>
-                    <div style="font-size:7px; color:#9BB5B3;">{{ $pending_english }} students</div>
+            <td width="16%">
+                {{-- Ditukar ke Merah (#EF4444) --}}
+                <div class="stat-box" style="border-top:4px solid #EF4444; background-color:#FFF5F5;">
+                    <div class="stat-val">{{ $total_students > 0 ? round(($pending_english/$total_students)*100) : 0 }}%</div>
+                    <div class="stat-lbl" style="color:#EF4444;">Pending English</div>
+                    <div class="stat-sub">{{ $pending_english }} students</div>
                 </div>
             </td>
         </tr>
     </table>
 
-    {{-- ── SECTION 2: DEMOGRAPHICS ── --}}
-    <div style="margin-bottom:8px; margin-top:14px;">
-        <div style="border-left:3px solid #2A9D8F; padding-left:7px;">
-            <div style="font-size:7px; font-weight:700; color:#2A9D8F; text-transform:uppercase; letter-spacing:1.2px;">Student Demographics</div>
-            <div style="font-size:7px; color:#8a9a99; margin-top:1px;">Breakdown by programme, gender, origin and funding</div>
-        </div>
-        <div style="height:1px; background-color:#E8F0EF; margin-top:4px;"></div>
-    </div>
+    {{-- SECTION 2: DEMOGRAPHICS --}}
+    <h3 style="font-size:14px; color:#008080; margin-top:22px; margin-bottom:14px; border-bottom: 2px solid #008080; padding-bottom: 4px;">2. STUDENT DEMOGRAPHICS</h3>
 
     @php
         $ptotal   = max($phd_students + $master_students, 1);
         $gtotal   = max($male_students + $female_students, 1);
         $ototal   = max($local_students + $international_students, 1);
         $payTotal = max($payment_scholarship + $payment_self + $payment_other + $payment_not_stated, 1);
+        
+        // Other dan Not-stated ditukar ke Kelabu (#9CA3AF)
         $payments = [
-            ['Scholarship', $payment_scholarship, '#2A9D8F'],
+            ['Scholarship', $payment_scholarship, '#008080'], 
             ['Self-funded',  $payment_self,        '#F4A261'],
-            ['Other',        $payment_other,       '#E76F51'],
-            ['Not-stated',   $payment_not_stated,  '#9BB5B3'],
+            ['Other',        $payment_other,       '#9CA3AF'], 
+            ['Not-stated',   $payment_not_stated,  '#9CA3AF'], 
         ];
     @endphp
 
-    <table width="100%" cellspacing="5" cellpadding="0" style="border-collapse:separate; margin-bottom:4px;">
+    <table width="100%" cellspacing="12" cellpadding="0" style="margin-left: -12px; width: calc(100% + 24px);">
         <tr>
-
-            {{-- Program Type --}}
             <td width="25%" valign="top">
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:10px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:6px; border-bottom:1px solid #E0ECEA;">Program Type</div>
-                    <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom:6px;">
-                        <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:#7C3AED; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">PhD</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $phd_students }}</strong> <span style="color:#9BB5B3;">({{ round(($phd_students/$ptotal)*100) }}%)</span></td>
-                        </tr>
-                        <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:#0891B2; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">Master</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $master_students }}</strong> <span style="color:#9BB5B3;">({{ round(($master_students/$ptotal)*100) }}%)</span></td>
-                        </tr>
+                <div class="card">
+                    <div class="card-title">Program Type</div>
+                    <table width="100%" cellpadding="3">
+                        <tr><td style="color:#7C3AED; font-weight:bold; font-size:11px;">PhD</td><td align="right"><b>{{ $phd_students }}</b> ({{ round(($phd_students/$ptotal)*100) }}%)</td></tr>
+                        <tr><td colspan="2"><div class="mtrack"><div class="mfill" style="width:{{ round(($phd_students/$ptotal)*100) }}%; background-color:#7C3AED;"></div></div></td></tr>
+                        <tr><td style="color:#0891B2; font-weight:bold; font-size:11px;">Master</td><td align="right"><b>{{ $master_students }}</b> ({{ round(($master_students/$ptotal)*100) }}%)</td></tr>
+                        <tr><td colspan="2"><div class="mtrack"><div class="mfill" style="width:{{ round(($master_students/$ptotal)*100) }}%; background-color:#0891B2;"></div></div></td></tr>
                     </table>
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">PhD</div>
-                    <div class="mtrack"><div class="mfill" style="width:{{ round(($phd_students/$ptotal)*100) }}%; background-color:#7C3AED;"></div></div>
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">Master</div>
-                    <div class="mtrack" style="margin-bottom:0;"><div class="mfill" style="width:{{ round(($master_students/$ptotal)*100) }}%; background-color:#0891B2;"></div></div>
                 </div>
             </td>
-
-            {{-- Gender --}}
             <td width="25%" valign="top">
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:10px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:6px; border-bottom:1px solid #E0ECEA;">Gender Distribution</div>
-                    <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom:6px;">
-                        <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:#2A9D8F; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">Male</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $male_students }}</strong> <span style="color:#9BB5B3;">({{ round(($male_students/$gtotal)*100) }}%)</span></td>
-                        </tr>
-                        <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:#E76F51; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">Female</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $female_students }}</strong> <span style="color:#9BB5B3;">({{ round(($female_students/$gtotal)*100) }}%)</span></td>
-                        </tr>
+                <div class="card">
+                    <div class="card-title">Gender Distribution</div>
+                    <table width="100%" cellpadding="3">
+                        {{-- Male ditukar ke Biru (#3B82F6), Female ke Pink (#EC4899) --}}
+                        <tr><td style="color:#3B82F6; font-weight:bold; font-size:11px;">Male</td><td align="right"><b>{{ $male_students }}</b> ({{ round(($male_students/$gtotal)*100) }}%)</td></tr>
+                        <tr><td colspan="2"><div class="mtrack"><div class="mfill" style="width:{{ round(($male_students/$gtotal)*100) }}%; background-color:#3B82F6;"></div></div></td></tr>
+                        <tr><td style="color:#EC4899; font-weight:bold; font-size:11px;">Female</td><td align="right"><b>{{ $female_students }}</b> ({{ round(($female_students/$gtotal)*100) }}%)</td></tr>
+                        <tr><td colspan="2"><div class="mtrack"><div class="mfill" style="width:{{ round(($female_students/$gtotal)*100) }}%; background-color:#EC4899;"></div></div></td></tr>
                     </table>
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">Male</div>
-                    <div class="mtrack"><div class="mfill" style="width:{{ round(($male_students/$gtotal)*100) }}%; background-color:#2A9D8F;"></div></div>
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">Female</div>
-                    <div class="mtrack" style="margin-bottom:0;"><div class="mfill" style="width:{{ round(($female_students/$gtotal)*100) }}%; background-color:#E76F51;"></div></div>
                 </div>
             </td>
-
-            {{-- Origin --}}
             <td width="25%" valign="top">
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:10px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:6px; border-bottom:1px solid #E0ECEA;">Student Origin</div>
-                    <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom:6px;">
-                        <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:#E9C46A; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">Local</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $local_students }}</strong> <span style="color:#9BB5B3;">({{ round(($local_students/$ototal)*100) }}%)</span></td>
-                        </tr>
-                        <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:#264653; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">International</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $international_students }}</strong> <span style="color:#9BB5B3;">({{ round(($international_students/$ototal)*100) }}%)</span></td>
-                        </tr>
+                <div class="card">
+                    <div class="card-title">Student Origin</div>
+                    <table width="100%" cellpadding="3">
+                        
+                        <tr><td style="color:#264653; font-weight:bold; font-size:11px;">Local</td><td align="right"><b>{{ $local_students }}</b> ({{ round(($local_students/$ototal)*100) }}%)</td></tr>
+                        <tr><td colspan="2"><div class="mtrack"><div class="mfill" style="width:{{ round(($local_students/$ototal)*100) }}%; background-color:#264653;"></div></div></td></tr>
+                        <tr><td style="color:#264653; font-weight:bold; font-size:11px;">International</td><td align="right"><b>{{ $international_students }}</b> ({{ round(($international_students/$ototal)*100) }}%)</td></tr>
+                        <tr><td colspan="2"><div class="mtrack"><div class="mfill" style="width:{{ round(($international_students/$ototal)*100) }}%; background-color:#264653;"></div></div></td></tr>
                     </table>
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">Local</div>
-                    <div class="mtrack"><div class="mfill" style="width:{{ round(($local_students/$ototal)*100) }}%; background-color:#E9C46A;"></div></div>
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">International</div>
-                    <div class="mtrack" style="margin-bottom:0;"><div class="mfill" style="width:{{ round(($international_students/$ototal)*100) }}%; background-color:#264653;"></div></div>
                 </div>
             </td>
-
-            {{-- Payment --}}
             <td width="25%" valign="top">
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:10px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:6px; border-bottom:1px solid #E0ECEA;">Payment Method</div>
-                    <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom:6px;">
+                <div class="card">
+                    <div class="card-title">Payment Method</div>
+                    <table width="100%" cellpadding="4" style="font-size:11px;">
                         @foreach($payments as [$plbl, $pval, $pcol])
                         <tr>
-                            <td width="13"><span style="width:7px; height:7px; border-radius:50%; background-color:{{ $pcol }}; display:inline-block; vertical-align:middle;"></span></td>
-                            <td style="font-size:8.5px; color:#2C3E3D;">{{ $plbl }}</td>
-                            <td align="right" style="font-size:8.5px;"><strong style="color:#0D2B28;">{{ $pval }}</strong> <span style="color:#9BB5B3;">({{ round(($pval/$payTotal)*100) }}%)</span></td>
+                            <td style="color:{{ $pcol }}; font-weight:bold;">{{ $plbl }}</td>
+                            <td align="right"><b>{{ $pval }}</b> ({{ round(($pval/$payTotal)*100) }}%)</td>
                         </tr>
                         @endforeach
                     </table>
-                    @foreach($payments as [$plbl, $pval, $pcol])
-                    <div style="font-size:6.5px; color:#9BB5B3; margin-bottom:2px;">{{ $plbl }}</div>
-                    <div class="mtrack"><div class="mfill" style="width:{{ round(($pval/$payTotal)*100) }}%; background-color:{{ $pcol }};"></div></div>
-                    @endforeach
                 </div>
-            </td>
-
-        </tr>
-    </table>
-
-    {{-- ── SECTION 3: ANALYTICS ── --}}
-    <div style="margin-bottom:8px; margin-top:14px;">
-        <div style="border-left:3px solid #2A9D8F; padding-left:7px;">
-            <div style="font-size:7px; font-weight:700; color:#2A9D8F; text-transform:uppercase; letter-spacing:1.2px;">Analytics</div>
-            <div style="font-size:7px; color:#8a9a99; margin-top:1px;">Status distribution, milestones, supervision and intake trends</div>
-        </div>
-        <div style="height:1px; background-color:#E8F0EF; margin-top:4px;"></div>
-    </div>
-
-    <table width="100%" cellspacing="5" cellpadding="0" style="border-collapse:separate;">
-        <tr>
-
-            {{-- LEFT COLUMN --}}
-            <td width="50%" valign="top">
-
-                {{-- Status Distribution --}}
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:11px 12px; margin-bottom:6px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:7px; border-bottom:1px solid #E0ECEA;">Student Status Distribution</div>
-                    @php
-                        $statuses = [
-                            ['Active',     $active_students,     '#10B981'],
-                            ['Completed',  $completed_students,  '#2A9D8F'],
-                            ['Deferred',   $deferred_students,   '#F59E0B'],
-                            ['Terminated', $terminated_students, '#EF4444'],
-                        ];
-                        $maxS = max(array_column($statuses, 1)) ?: 1;
-                    @endphp
-                    @foreach($statuses as [$lbl, $cnt, $col])
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td style="font-size:8px; color:#2C3E3D;">
-                                <span style="width:7px; height:7px; border-radius:50%; background-color:{{ $col }}; display:inline-block; vertical-align:middle; margin-right:4px;"></span>{{ $lbl }}
-                            </td>
-                            <td align="right" style="font-size:8px;">
-                                <strong style="color:#0D2B28;">{{ $cnt }}</strong>
-                                <span style="color:#9BB5B3;">&nbsp;({{ $total_students > 0 ? round(($cnt/$total_students)*100) : 0 }}%)</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="track"><div class="fill" style="width:{{ round(($cnt/$maxS)*100) }}%; background-color:{{ $col }};"></div></div>
-                    @endforeach
-                </div>
-
-                {{-- Milestones --}}
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:11px 12px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:7px; border-bottom:1px solid #E0ECEA;">Progress Milestones Completion</div>
-                    @php
-                        $milestones = [
-                            ['English Test',    $passed_english,     '#2A9D8F'],
-                            ['Pre-Viva',        $pre_viva_completed, '#7C3AED'],
-                            ['Viva',            $viva_completed,     '#E9C46A'],
-                            ['Degree Verified', $degree_verified,    '#E76F51'],
-                        ];
-                    @endphp
-                    @foreach($milestones as [$lbl, $cnt, $col])
-                    @php $mpct = $total_students > 0 ? round(($cnt/$total_students)*100) : 0; @endphp
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td style="font-size:8px; color:#2C3E3D;">
-                                <span style="width:7px; height:7px; border-radius:50%; background-color:{{ $col }}; display:inline-block; vertical-align:middle; margin-right:4px;"></span>{{ $lbl }}
-                            </td>
-                            <td align="right" style="font-size:8px;">
-                                <strong style="color:#0D2B28;">{{ $cnt }} / {{ $total_students }}</strong>
-                                <span style="color:#9BB5B3;">&nbsp;{{ $mpct }}%</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="track"><div class="fill" style="width:{{ $mpct }}%; background-color:{{ $col }};"></div></div>
-                    @endforeach
-                </div>
-
-            </td>
-
-            {{-- RIGHT COLUMN --}}
-            <td width="50%" valign="top">
-
-                {{-- Top Supervisors --}}
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:11px 12px; margin-bottom:6px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:7px; border-bottom:1px solid #E0ECEA;">Top Supervisors by Student Count</div>
-                    @if($top_supervisors->isEmpty())
-                        <p style="font-size:8px; color:#9BB5B3; text-align:center; padding:8px 0;">No supervisors assigned yet</p>
-                    @else
-                        @php $maxSv = $top_supervisors->max('main_students_count') ?: 1; @endphp
-                        @foreach($top_supervisors as $sv)
-                        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:5px;">
-                            <tr>
-                                <td width="110" align="right" valign="middle" style="padding-right:6px; font-size:7.5px; color:#2C3E3D;">{{ $sv->full_name }}</td>
-                                <td valign="middle">
-                                    <div style="background-color:#E0ECEA; border-radius:2px; height:10px;">
-                                        <div style="width:{{ round(($sv->main_students_count/$maxSv)*100) }}%; height:10px; border-radius:2px; background-color:#2A9D8F;"></div>
-                                    </div>
-                                </td>
-                                <td width="20" align="left" valign="middle" style="padding-left:5px; font-size:7.5px; font-weight:700; color:#0D2B28;">{{ $sv->main_students_count }}</td>
-                            </tr>
-                        </table>
-                        @endforeach
-                    @endif
-                </div>
-
-                {{-- Intake Table --}}
-                <div style="background-color:#F7FAFA; border:1px solid #DDE8E7; border-radius:5px; padding:11px 12px;">
-                    <div style="font-size:7px; font-weight:700; color:#5a7370; text-transform:uppercase; letter-spacing:0.8px; padding-bottom:5px; margin-bottom:7px; border-bottom:1px solid #E0ECEA;">Student Intake by Session</div>
-                    <table class="dt">
-                        <thead>
-                            <tr>
-                                <th>Intake Session</th>
-                                <th style="text-align:center; width:55px;">Students</th>
-                                <th style="text-align:center; width:45px;">Share</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($intake_data as $i => $row)
-                            <tr class="{{ $i % 2 === 1 ? 'alt' : '' }}">
-                                <td>{{ $row->intake_session ?? 'Not Set' }}</td>
-                                <td style="text-align:center; font-weight:700; color:#0D2B28;">{{ $row->total }}</td>
-                                <td style="text-align:center; font-weight:700; color:#2A9D8F;">{{ $total_students > 0 ? round(($row->total/$total_students)*100) : 0 }}%</td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="3" style="text-align:center; color:#9BB5B3; padding:10px 8px;">No intake data available</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
             </td>
         </tr>
     </table>
 
-</div>{{-- /page-body --}}
+    {{-- SECTION 3: ANALYTICS --}}
+                <h3 style="font-size:14px; color:#008080; margin-top:20px; margin-bottom:14px; border-bottom: 2px solid #008080; padding-bottom: 4px;">3. DEEP ANALYTICS</h3>
 
-{{-- ══════════════════════════════════════
-     FOOTER
-══════════════════════════════════════ --}}
-<div style="background-color:#0D2B28; padding:8px 18px; margin-top:14px;">
+                {{-- ROW 1: Status Distribution | Progress Milestones --}}
+                <table width="100%" cellspacing="12" cellpadding="0" style="margin-left: -12px; width: calc(100% + 24px); margin-bottom:0;">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <div class="card">
+                                <div class="card-title">Status Distribution</div>
+                                @php
+                                    $statuses = [
+                                        ['Active',     $active_students,     '#10B981'],
+                                        ['Completed',  $completed_students,  '#008080'],
+                                        ['Deferred',   $deferred_students,   '#F59E0B'],
+                                        ['Terminated', $terminated_students, '#EF4444'],
+                                    ];
+                                    $maxS = max(array_column($statuses, 1)) ?: 1;
+                                @endphp
+                                @foreach($statuses as [$lbl, $cnt, $col])
+                                <table width="100%" cellpadding="1" style="font-size:11px;">
+                                    <tr><td>{{ $lbl }}</td><td align="right"><b>{{ $cnt }}</b> ({{ $total_students > 0 ? round(($cnt/$total_students)*100) : 0 }}%)</td></tr>
+                                </table>
+                                <div class="track"><div class="fill" style="width:{{ round(($cnt/$maxS)*100) }}%; background-color:{{ $col }};"></div></div>
+                                @endforeach
+                            </div>
+                        </td>
+
+                        <td width="50%" valign="top">
+                            <div class="card">
+                                <div class="card-title">Progress Milestones (Active Students Only)</div>
+                                @php
+                                    $milestones = [
+                                        ['Research Method (RM)', $passed_rm,          '#008080'],
+                                        ['Proposal Defense (PD)',$passed_pd,          '#008080'],
+                                        ['Pre-Viva',             $pre_viva_completed, '#008080'],
+                                        ['Viva',                 $viva_completed,     '#008080'],
+                                    ];
+                                @endphp
+                                @foreach($milestones as [$lbl, $cnt, $col])
+                                @php $mpct = $active_students > 0 ? round(($cnt/$active_students)*100) : 0; @endphp
+                                <table width="100%" cellpadding="1" style="font-size:11px;">
+                                    <tr><td><strong style="color:{{ $col }};">{{ $lbl }}</strong></td><td align="right"><b>{{ $cnt }} / {{ $active_students }}</b> ({{ $mpct }}%)</td></tr>
+                                </table>
+                                <div class="track"><div class="fill" style="width:{{ $mpct }}%; background-color:{{ $col }};"></div></div>
+                                @endforeach
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                {{-- ROW 2: Top Supervisors | Student Intake Trend --}}
+                <table width="100%" cellspacing="12" cellpadding="0" style="margin-left: -12px; width: calc(100% + 24px);">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <div class="card">
+                                <div class="card-title">Top 10 Supervisors (All Time)</div>
+                                @if($top_supervisors->isEmpty())
+                                    <p style="text-align:center; color:#999; padding:10px; font-size:11px;">No supervisors assigned yet</p>
+                                @else
+                                    @php $maxSv = $top_supervisors->max('main_students_count') ?: 1; @endphp
+                                    @foreach($top_supervisors as $sv)
+                                    <table width="100%" style="margin-bottom:9px;">
+                                        <tr>
+                                            <td width="52%" style="font-size:10px; color:#2C3E3D;">{{ $sv->full_name }}</td>
+                                            <td width="38%">
+                                                <div style="background-color:#E0ECEA; height:10px; border-radius:3px;">
+                                                    <div style="width:{{ round(($sv->main_students_count/$maxSv)*100) }}%; height:10px; border-radius:3px; background-color:#008080;"></div>
+                                                </div>
+                                            </td>
+                                            <td width="10%" align="right" style="font-weight:bold; font-size:11px;">{{ $sv->main_students_count }}</td>
+                                        </tr>
+                                    </table>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </td>
+
+                        <td width="50%" valign="top">
+                            <div class="card">
+                                <div class="card-title">Student Intake Trend <span style="color:#9BB5B3; font-size:8px; float:right;">(LATEST 10)</span></div>
+                                @php
+                                    $intakeArr = $intake_data->values()->toArray();
+                                @endphp
+                                <table class="dt">
+                                   <thead>
+                                            <tr>
+                                                <th>Session</th>
+                                                <th style="text-align:center; width:35px;">Male</th>
+                                                <th style="text-align:center; width:40px;">Female</th>
+                                                <th style="text-align:center; width:35px;">PhD</th>
+                                                <th style="text-align:center; width:40px;">Master</th>
+                                                <th style="text-align:center; width:40px;">Total</th>
+                                                <th style="text-align:center; width:45px;">Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($intakeArr as $i => $row)
+                                            @php
+                                                $session = $row['intake_session'] ?? 'Not Set';
+                                                $total   = $row['total'];
+
+                                                $male   = \App\Models\Student::where('intake_session', $session)->where('gender', 'Male')->count();
+                                                $female = \App\Models\Student::where('intake_session', $session)->where('gender', 'Female')->count();
+                                                $phd    = \App\Models\Student::where('intake_session', $session)->where('program_type', 'PhD')->count();
+                                                $master = \App\Models\Student::where('intake_session', $session)->where('program_type', 'Master')->count();
+
+                                                $prevTotal = isset($intakeArr[$i - 1]) ? $intakeArr[$i - 1]['total'] : null;
+
+                                                if ($prevTotal === null || $prevTotal === 0) {
+                                                    $rateText  = '-';
+                                                    $rateColor = '#9BB5B3';
+                                                } elseif ($total > $prevTotal) {
+                                                    $pct       = round((($total - $prevTotal) / $prevTotal) * 100);
+                                                    $rateText  = '+' . $pct . '%';
+                                                    $rateColor = '#10B981';
+                                                } elseif ($total < $prevTotal) {
+                                                    $pct       = round((($prevTotal - $total) / $prevTotal) * 100);
+                                                    $rateText  = '-' . $pct . '%';
+                                                    $rateColor = '#EF4444';
+                                                } else {
+                                                    $rateText  = '0%';
+                                                    $rateColor = '#F59E0B';
+                                                }
+                                            @endphp
+                                            <tr class="{{ $i % 2 === 1 ? 'alt' : '' }}">
+                                                <td>{{ $session }}</td>
+                                                <td style="text-align:center; color:#3B82F6; font-weight:bold;">{{ $male }}</td>
+                                                <td style="text-align:center; color:#EC4899; font-weight:bold;">{{ $female }}</td>
+                                                <td style="text-align:center; color:#7C3AED; font-weight:bold;">{{ $phd }}</td>
+                                                <td style="text-align:center; color:#0891B2; font-weight:bold;">{{ $master }}</td>
+                                                <td style="text-align:center; font-weight:bold; color:#0D2B28;">{{ $total }}</td>
+                                                <td style="text-align:center; font-weight:bold; color:{{ $rateColor }};">{{ $rateText }}</td>
+                                            </tr>
+                                            @empty
+                                            <tr><td colspan="7" align="center" style="padding:15px; font-size:11px;">No intake data available</td></tr>
+                                            @endforelse
+                                        </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+</div>
+
+{{-- FOOTER --}}
+<div class="footer">
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td style="font-size:6.5px; color:rgba(255,255,255,0.4);">
+            <td style="font-size:9.5px; color:#B2DFDB;">
                 UMK PG Tracker &nbsp;&middot;&nbsp; Postgraduate Student Management System &nbsp;&middot;&nbsp; FSDK &nbsp;&middot;&nbsp; Universiti Malaysia Kelantan
             </td>
-            <td style="font-size:6.5px; color:rgba(255,255,255,0.4); text-align:right;">
-                <span style="color:#2A9D8F; font-weight:700;">CONFIDENTIAL</span> &nbsp;&middot;&nbsp; Generated: {{ $generated_at }}
+            <td style="font-size:9.5px; color:#B2DFDB; text-align:right;">
+                <span style="color:#E9C46A; font-weight:bold;">CONFIDENTIAL</span>
             </td>
         </tr>
     </table>

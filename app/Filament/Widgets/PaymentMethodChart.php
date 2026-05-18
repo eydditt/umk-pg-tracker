@@ -23,7 +23,7 @@ class PaymentMethodChart extends ChartWidget
                         Student::where('payment_method', 'Other')->count(),
                         Student::where('payment_method', 'Not-stated')->count(),
                     ],
-                    'backgroundColor' => ['#2A9D8F', '#F4A261', '#E76F51', '#e751b5'],
+                    'backgroundColor' => ['#71eeff', '#1E3A8A', '#000000', '#c9c9c9'],
                 ]],
                 'labels' => ['Scholarship', 'Self-funded', 'Other' , 'Not-stated'],
             ];

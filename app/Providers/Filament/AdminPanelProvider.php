@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->brandName('UMK PG Tracker')
+            ->favicon(asset('images/logo/logofsdk.png'))  
             ->colors([
                 'primary' => Color::hex('#2A9D8F'),
             ])
@@ -256,10 +257,8 @@ class AdminPanelProvider extends PanelProvider
                 fn() => Blade::render('
                     <div style="text-align: center; margin-bottom: 1.5rem;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 1.25rem; margin-bottom: 1rem;">
-                            <img src="/images/logo/logoumk.png" alt="UMK Logo"
-                                style="height: 64px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));">
                             <img src="/images/logo/logofsdk.png" alt="FSDK Logo"
-                                style="height: 100px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)) brightness(1.1);">
+                                style="height: 150px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)) brightness(1.1);">
                         </div>
                         <h2 style="color: #ffffff; font-size: 1.3rem; font-weight: 700; margin: 0 0 0.5rem; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
                             UMK PG Tracker
