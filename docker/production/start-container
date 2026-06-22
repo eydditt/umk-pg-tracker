@@ -7,6 +7,15 @@ chmod -R 775 /var/www/html/bootstrap/cache
 # Run migrations
 php /var/www/html/artisan migrate --force
 
+# Create default admin user if not exists
+php /var/www/html/artisan tinker --execute="
+\App\Models\User::firstOrCreate(
+    ['email' => 'pascasiswazah.fsdk@umk.edu.my'],
+    ['name' => 'Admin FSDK', 'password' => bcrypt('Admin@1234')]
+);
+echo 'Done';
+"
+
 # Cache config untuk production
 php /var/www/html/artisan config:cache
 php /var/www/html/artisan route:cache
