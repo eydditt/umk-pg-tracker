@@ -18,9 +18,9 @@ class Dashboard extends BaseDashboard
             \App\Filament\Widgets\GreetingWidget::class,
             \App\Filament\Widgets\StatsOverview::class,
             \App\Filament\Widgets\ProgramTypeChart::class,
-            \App\Filament\Widgets\GenderChart::class,
+           // \App\Filament\Widgets\GenderChart::class, tokse guno
             \App\Filament\Widgets\OriginChart::class,
-            \App\Filament\Widgets\PaymentMethodChart::class,
+         //   \App\Filament\Widgets\PaymentMethodChart::class, tokse guno
             \App\Filament\Widgets\IntakeTrendChart::class,
             \App\Filament\Widgets\ProgressMilestonesChart::class,
             \App\Filament\Widgets\TopSupervisorChart::class,

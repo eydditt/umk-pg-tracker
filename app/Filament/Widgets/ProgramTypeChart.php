@@ -8,10 +8,9 @@ use Filament\Widgets\ChartWidget;
 class ProgramTypeChart extends ChartWidget
 {
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 1;
+    protected int | string | array $columnSpan = 2;   
     protected ?string $heading = 'Program Type';
-    protected ?string $maxHeight = '250px';
-
+    protected ?string $maxHeight = '340px';           
 
     protected function getData(): array
     {
@@ -28,4 +27,22 @@ class ProgramTypeChart extends ChartWidget
     }
 
     protected function getType(): string { return 'doughnut'; }
+
+    protected function getOptions(): array
+    {
+        return [
+            'maintainAspectRatio' => false,
+            'cutout' => '55%',
+            'plugins' => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels' => [
+                        'boxWidth' => 14,
+                        'padding' => 16,
+                        'font' => ['size' => 13],
+                    ],
+                ],
+            ],
+        ];
+    }
 }

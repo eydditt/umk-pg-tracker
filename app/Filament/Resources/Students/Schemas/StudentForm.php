@@ -49,6 +49,11 @@ class StudentForm
                         ->required()
                         ->dehydrated(true)
                         ->hint('Editable'),
+                    Select::make('country')
+                        ->label('Country')
+                        ->options(\App\Helpers\CountryList::options())
+                        ->searchable()
+                        ->dehydrated(true),
                     Select::make('program_type')
                         ->label('Program')
                         ->options(['Master' => 'Master', 'PhD' => 'PhD'])
@@ -57,6 +62,16 @@ class StudentForm
                     Select::make('intake_session')
                         ->label('Intake Session')
                         ->options(fn() => self::intakeSessionOptions())
+                        ->required()
+                        ->dehydrated(true),
+
+                    Select::make('intake_month')
+                        ->label('Intake Month')
+                        ->options([
+                            'September' => '🎓 September',
+                            'February'  => '🎓 February',
+                        ])
+                        ->default('September')
                         ->required()
                         ->dehydrated(true),                        
                     Select::make('status')
@@ -105,10 +120,14 @@ class StudentForm
                         ])->collapsible()->collapsed(),
 
                     Section::make('English Proficiency')->schema([
-                        Select::make('progress.eng_test_status')
-                            ->label('Status')
-                            ->options(['Pending' => 'Pending', 'Passed' => 'Passed'])
-                            ->required()->dehydrated(true)->live(),
+                       Select::make('progress.eng_test_status')
+                                ->label('Status')
+                                ->options([
+                                    'Pending'      => 'Pending',
+                                    'Passed'       => 'Passed',
+                                    'Not Required' => 'Not Required',
+                                ])
+                                ->required()->dehydrated(true)->live(),
                         TextInput::make('eng_test')
                             ->label('MUET/IELTS Score')
                             ->dehydrated(true),
@@ -127,6 +146,109 @@ class StudentForm
                             'Slip Pendaftaran Semester',
                         ])])->collapsible()->collapsed(),
 
+                    // ── SEMESTER STATUS SECTION ──
+                    Section::make('📅 Semester Status')
+                        ->schema([
+                            \Filament\Forms\Components\Placeholder::make('semester_info')
+                                ->label('')
+                                ->content(function ($record) {
+                                    if (!$record) return '—';
+
+                                    $current = $record->current_semester;
+                                    $max     = $record->effective_max_semester;
+                                    $base    = $record->max_semester;
+                                    $extra   = $record->extended_semesters;
+                                    $status  = $record->extension_status;
+
+                                    if (!$current) return new \Illuminate\Support\HtmlString(
+                                        '<span style="color:#9ca3af;">Semester cannot be calculated — no intake session set.</span>'
+                                    );
+
+                                    $pct   = min(100, round(($current / $max) * 100));
+                                    $color = $current > $max ? '#ef4444' : ($current >= $max ? '#f59e0b' : '#2A9D8F');
+                                    $bar   = '<div style="background:#e5e7eb;border-radius:6px;height:10px;margin:6px 0 10px;">
+                                                <div style="width:'.$pct.'%;background:'.$color.';height:10px;border-radius:6px;transition:width 0.3s;"></div>
+                                            </div>';
+
+                                    $extInfo = $extra > 0
+                                        ? '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:8px;">+' . $extra . ' sem extended</span>'
+                                        : '';
+
+                                    $statusBadge = match($status) {
+                                        'Pending'  => '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:11px;">⏳ Extension Pending</span>',
+                                        'Approved' => '<span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:4px;font-size:11px;">✅ Extension Approved</span>',
+                                        'Rejected' => '<span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-size:11px;">❌ Extension Rejected</span>',
+                                        default    => '',
+                                    };
+
+                                    $exceeded = $current > $max
+                                        ? '<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-top:10px;color:#991b1b;font-weight:600;">
+                                            ⚠️ This student has exceeded the maximum semester limit (' . $max . ' semesters). An extension request is required.
+                                        </div>'
+                                        : '';
+
+                                    $approaching = ($current == $max && $current <= $max)
+                                        ? '<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;margin-top:10px;color:#92400e;font-weight:600;">
+                                            ⚠️ This student is on their final semester. Consider submitting an extension request soon.
+                                        </div>'
+                                        : '';
+
+                                    return new \Illuminate\Support\HtmlString('
+                                        <div style="font-size:13px;">
+                                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                                                <strong>Current Semester:</strong>
+                                                <span style="font-size:18px;font-weight:700;color:'.$color.';">Sem '.$current.'</span>
+                                                <span style="color:#9ca3af;">/ '.$max.' max</span>
+                                                '.$extInfo.'
+                                                '.$statusBadge.'
+                                            </div>
+                                            '.$bar.'
+                                            <div style="color:#6b7280;font-size:12px;">
+                                                Program: <strong>'.$record->program_type.'</strong> &nbsp;|&nbsp;
+                                                Intake: <strong>'.$record->intake_session.'</strong> &nbsp;|&nbsp;
+                                                Base limit: <strong>'.$base.' semesters</strong>
+                                            </div>
+                                            '.$exceeded.'
+                                            '.$approaching.'
+                                        </div>
+                                    ');
+                                }),
+                        ]),
+
+                    // ── EXTENSION REQUEST SECTION ──
+                    Section::make('📝 Semester Extension Request')
+                        ->description('Submit an extension request if the student requires additional semesters beyond the standard limit.')
+                        ->schema([
+                            \Filament\Forms\Components\Select::make('extension_status')
+                                ->label('Extension Status')
+                                ->options([
+                                    'None'     => 'None',
+                                    'Pending'  => 'Pending',
+                                    'Approved' => 'Approved',
+                                    'Rejected' => 'Rejected',
+                                ])
+                                ->default('None')
+                                ->dehydrated(true)
+                                ->live(),
+
+                            \Filament\Forms\Components\TextInput::make('extended_semesters')
+                                ->label('Additional Semesters Granted')
+                                ->numeric()
+                                ->default(0)
+                                ->minValue(0)
+                                ->maxValue(6)
+                                ->dehydrated(true)
+                                ->visible(fn($get) => $get('extension_status') === 'Approved')
+                                ->helperText('Max 6 additional semesters allowed'),
+
+                            \Filament\Forms\Components\Textarea::make('extension_reason')
+                                ->label('Reason for Extension')
+                                ->rows(3)
+                                ->dehydrated(true)
+                                ->visible(fn($get) => in_array($get('extension_status'), ['Pending', 'Approved', 'Rejected']))
+                                ->placeholder('State the reason for semester extension request...'),
+                        ])->columns(2),
+
                     self::gdriveRepeater('gdrive_p02', 'P02'),
                 ]),
 
@@ -142,13 +264,33 @@ class StudentForm
                     Section::make('Supervisor Assignment')->schema([
                         Select::make('main_sv_id')
                             ->label('Main Supervisor')
-                            ->options(Lecturer::all()->pluck('full_name', 'id'))
-                            ->searchable()->dehydrated(true)->nullable(),
-                        Select::make('co_sv_id')
-                            ->label('Co-Supervisor')
-                            ->options(Lecturer::all()->pluck('full_name', 'id'))
-                            ->searchable()->dehydrated(true)->nullable(),
-                    ])->columns(2),
+                            ->options(function() {
+                                return Lecturer::withCount(['mainStudents' => fn($q) => $q->where('status', 'Active')])
+                                    ->get()
+                                    ->mapWithKeys(fn($l) => [
+                                        $l->id => $l->full_name . ' (' . $l->main_students_count . ' active students)'
+                                    ]);
+                            })
+                            ->searchable()
+                            ->dehydrated(true)
+                            ->nullable(),
+
+                        \Filament\Forms\Components\Repeater::make('co_supervisor_ids')
+                        ->label('Co-Supervisors')
+                        ->schema([
+                            Select::make('lecturer_id')
+                                ->label('Co-Supervisor')
+                                ->options(Lecturer::all()->pluck('full_name', 'id'))
+                                ->searchable()
+                                ->required()
+                                ->distinct(),
+                        ])
+                        ->addActionLabel('+ Add Co-Supervisor')
+                        ->defaultItems(0)
+                        ->maxItems(5)
+                        ->columnSpanFull()
+                        ->dehydrated(true),
+                ])->columns(2),
 
                     self::gdriveRepeater('gdrive_p03', 'P03'),
                 ]),

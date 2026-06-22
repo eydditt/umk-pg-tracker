@@ -27,10 +27,16 @@ class ApplicantsTable
                 TextColumn::make('full_name')
                     ->label('Full Name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    
+                    ->wrap()
+                    ->limit(35)
+                    ->tooltip(fn ($record) => $record->full_name),
+                    
                 TextColumn::make('identity_no')
                     ->label('Identity No')
                     ->searchable(),
+                    
                 TextColumn::make('program_applied')
                     ->label('Program')
                     ->badge()
@@ -39,6 +45,7 @@ class ApplicantsTable
                         'Master' => 'master',
                         default  => 'gray',
                     }),
+                    
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state) => match($state) {
@@ -47,29 +54,29 @@ class ApplicantsTable
                         'Rejected' => 'danger',
                         default    => 'gray',
                     }),
+                    
                 TextColumn::make('intake_session')
                     ->label('Intake')
                     ->sortable()
                     ->searchable(),
             ])
             ->filters([
-                    SelectFilter::make('status')
-                        ->options([
-                            'Pending'  => 'Pending',
-                            'Approved' => 'Approved',
-                            'Rejected' => 'Rejected',
-                            
-                        ]),
+                SelectFilter::make('status')
+                    ->options([
+                        'Pending'  => 'Pending',
+                        'Approved' => 'Approved',
+                        'Rejected' => 'Rejected',
+                    ]),
 
-                    SelectFilter::make('program_applied')
+                SelectFilter::make('program_applied')
                     ->options([
                         'Master' => 'Master',
-                        'PhD' => 'PhD',
+                        'PhD'    => 'PhD',
                     ]),
             ])
             ->recordActions([
                 EditAction::make()
-                    ->visible(fn(Applicant $record) => $record->status === 'Approved'),
+                    ->visible(fn(Applicant $record) => $record->status === 'Pending'), 
 
                 Action::make('approve')
                     ->label('Approve')
@@ -92,13 +99,19 @@ class ApplicantsTable
                             'program_type'           => $record->program_applied,
                             'email'                  => $record->email,
                             'gender'                 => $record->gender,
+                            'nationality_type'       => $record->identity_type === 'IC' ? 'Local' : 'International',
+                            'country'                => $record->country,
                             'application_docs_links' => $record->application_docs_links,
-                            'payment_method'         => 'Self-funded',
+                            'payment_method'         => 'Not-stated',
                             'status'                 => 'Active',
+                            'intake_session'         => $record->intake_session,
+                            'intake_month'           => $record->intake_month ?? 'September',
                         ]);
-
-                        // Map eng_test_taken dari applicant ke eng_test_status dalam progress
-                        $engStatus = $record->eng_test_taken === 'Taken' ? 'Passed' : 'Pending';
+                        $engStatus = match($record->eng_test_taken) {
+                            'Taken'        => 'Passed',
+                            'Not Required' => 'Not Required',
+                            default        => 'Pending',
+                        };
 
                         StudentProgress::create([
                             'student_id'      => $student->id,
@@ -122,9 +135,9 @@ class ApplicantsTable
                     ->action(function(Applicant $record) {
                         $record->update(['status' => 'Rejected']);
                         Notification::make()
-                        ->title('Applicant rejected.')
-                        ->warning()
-                        ->send();
+                            ->title('Applicant rejected.')
+                            ->warning()
+                            ->send();
                     }),
 
                Action::make('delete')
@@ -146,17 +159,31 @@ class ApplicantsTable
                             ->warning()
                             ->send();
                     }),
-                            ])
+            ])
+            ->defaultSort(fn($query) => $query->orderByRaw("FIELD(status, 'Pending', 'Approved', 'Rejected')"))
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->modalHeading('Permanently Delete Selected Applicants')
                         ->modalDescription(new HtmlString(
                             'Are you sure you want to delete the selected applicants? This action is irreversible, and all records will be permanently removed from the system.<br><br>
-                            <strong>⚠️ Note:</strong> If any applicant has already become a student, their student record will also be affected.'
+                            <strong>⚠️ Note:</strong> If any applicant has already become a student, their student and progress records will ALSO be deleted to prevent orphaned data.'
                         ))
                         ->modalSubmitActionLabel('Yes, Delete All')
-                        ->action(fn($records) => $records->each->forceDelete()),
+                        ->action(function($records) {
+                          
+                            $records->each(function ($record) {
+                        
+                                $student = Student::where('applicant_id', $record->id)->first();
+                                
+                                if ($student) {
+                                    $student->progress()->delete(); 
+                                    $student->forceDelete();        
+                                }
+                                
+                                $record->forceDelete(); 
+                            });
+                        }),
                 ]),
             ]);
     }

@@ -27,12 +27,33 @@ class EditApplicant extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            // Approve Button — hanya visible bila Pending
             Action::make('approve')
                 ->label('Approve')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
                 ->visible(fn() => $this->record->status === 'Pending')
+                ->requiresConfirmation()
+                ->modalHeading('Approve Applicant')
+                ->modalDescription(new HtmlString('
+                    <div style="padding:12px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;margin-bottom:12px;">
+                        <strong style="color:#92400e;">⚠️ Important — Before You Approve:</strong>
+                        <ul style="margin-top:8px;color:#92400e;padding-left:18px;line-height:1.8;">
+                            <li>Make sure you have <strong>saved all changes</strong> to this form first.</li>
+                            <li>Unsaved changes will <strong>NOT be carried over</strong> to the student record.</li>
+                            <li>Click <strong>Cancel</strong>, save the form, then approve again if needed.</li>
+                        </ul>
+                    </div>
+                    <div style="padding:12px;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;">
+                        <strong style="color:#166534;">✅ After confirming:</strong>
+                        <ul style="margin-top:8px;color:#166534;padding-left:18px;line-height:1.8;">
+                            <li>Applicant status → <strong>Approved</strong></li>
+                            <li>Student record will be <strong>automatically created</strong></li>
+                            <li>All saved fields will be synced to student profile</li>
+                        </ul>
+                    </div>
+                '))
+                ->modalSubmitActionLabel('Yes, I have saved — Approve Now')
+                ->modalCancelActionLabel('Cancel — Let me save first')
                 ->form([
                     TextInput::make('matric_no')
                         ->label('New Matric Number')
@@ -44,19 +65,26 @@ class EditApplicant extends EditRecord
                     $record = $this->record;
                     $record->update(['status' => 'Approved']);
 
-                    $student = Student::create([
-                        'applicant_id'           => $record->id,
-                        'matric_no'              => $data['matric_no'],
-                        'program_type'           => $record->program_applied,
-                        'email'                  => $record->email,
-                        'gender'                 => $record->gender,
-                        'nationality_type'       => $record->identity_type === 'IC' ? 'Local' : 'International',
-                        'application_docs_links' => $record->application_docs_links,
-                        'payment_method'         => 'Not-stated',
-                        'status'                 => 'Active',
-                    ]);
+                   $student = Student::create([
+                    'applicant_id'           => $record->id,
+                    'matric_no'              => $data['matric_no'],
+                    'program_type'           => $record->program_applied,
+                    'email'                  => $record->email,
+                    'gender'                 => $record->gender,
+                    'nationality_type'       => $record->identity_type === 'IC' ? 'Local' : 'International',
+                    'country'                => $record->country,
+                    'application_docs_links' => $record->application_docs_links,
+                    'payment_method'         => 'Not-stated',
+                    'status'                 => 'Active',
+                    'intake_session'         => $record->intake_session,
+                    'intake_month'           => $record->intake_month ?? 'September',
+                ]);
 
-                    $engStatus = $record->eng_test_taken === 'Taken' ? 'Passed' : 'Pending';
+                        $engStatus = match($record->eng_test_taken) {
+                            'Taken'        => 'Passed',
+                            'Not Required' => 'Not Required',
+                            default        => 'Pending',
+                            };
 
                     StudentProgress::create([
                         'student_id'      => $student->id,

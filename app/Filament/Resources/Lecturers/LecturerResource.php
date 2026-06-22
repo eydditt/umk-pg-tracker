@@ -33,7 +33,11 @@ class LecturerResource extends Resource
     {
         return LecturersTable::configure($table);
     }
-
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount(['mainStudents as active_students_count' => fn($q) => $q->where('status', 'Active')]);
+}
     public static function getRelations(): array
     {
         return [];

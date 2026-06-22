@@ -52,6 +52,13 @@ class ApplicantForm
                         ->options(['IC' => 'IC (Local)', 'Passport' => 'Passport (International)'])
                         ->required()
                         ->live()
+                         ->afterStateUpdated(function ($state, $set) {
+                            if ($state === 'IC') {
+                                $set('country', 'Malaysia');
+                            } else {
+                                $set('country', null);
+                            }
+                        })
                         ->disabled(fn($record) => $record?->status === 'Approved')
                         ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
                         ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
@@ -63,6 +70,14 @@ class ApplicantForm
                         ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
                         ->live()
                         ->disabled(fn($record) => $record?->status === 'Approved'),
+                    Select::make('country')
+                        ->label('Country')
+                        ->options(\App\Helpers\CountryList::options())
+                        ->searchable()
+                        ->required()
+                        ->disabled(fn($record) => $record?->status === 'Approved')
+                        ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
+                        ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
                     Select::make('program_applied')
                         ->label('Program Applied')
                         ->options(['Master' => 'Master', 'PhD' => 'PhD'])
@@ -77,6 +92,17 @@ class ApplicantForm
                         ->disabled(fn($record) => $record?->status === 'Approved')
                         ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
                         ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
+                    Select::make('intake_month')
+                        ->label('Intake Month')
+                        ->options([
+                            'September' => '🎓 September',
+                            'February'  => '🎓 February',
+                        ])
+                        ->default('September')
+                        ->required()
+                        ->disabled(fn($record) => $record?->status === 'Approved')
+                        ->hintIcon(fn($record) => $record?->status === 'Approved' ? 'heroicon-o-lock-closed' : null)
+                        ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
                     Textarea::make('prev_edu')
                         ->label('Previous Education')
                         ->columnSpanFull()
@@ -85,7 +111,11 @@ class ApplicantForm
                         ->hint(fn($record) => $record?->status === 'Approved' ? 'Locked' : null),
                     Select::make('eng_test_taken')
                         ->label('English Test Status')
-                        ->options(['Taken' => 'Taken', 'Not Taken' => 'Not Taken'])
+                        ->options([
+                            'Taken'        => 'Taken',
+                            'Not Taken'    => 'Not Taken',
+                            'Not Required' => 'Not Required',
+                        ])
                         ->default('Not Taken')
                         ->required()
                         ->live()

@@ -52,7 +52,16 @@ class EditStudent extends EditRecord
             $data['eng_test']                   = $student->applicant->eng_test;
             $data['applicant_prev_edu']         = $student->applicant->prev_edu;
             $data['application_docs_links']     = $student->application_docs_links ?? [];
+            $data['intake_month'] = $student->intake_month ?? 'September';
+            $data['extended_semesters'] = $student->extended_semesters ?? 0;
+            $data['extension_reason']   = $student->extension_reason;
+            $data['extension_status']   = $student->extension_status ?? 'None';
         }
+ // Load co-supervisors
+        $data['co_supervisor_ids'] = $student->coSupervisors
+            ->map(fn($sv) => ['lecturer_id' => $sv->id])
+            ->values()
+            ->toArray();
 
         if ($student->progress) {
             $data['progress'] = $student->progress->toArray();
@@ -103,18 +112,35 @@ class EditStudent extends EditRecord
             ]
         );
 
-        $this->record->update([
-            'email'          => $this->data['email'] ?? $this->record->email,
-            'gender'         => $this->data['gender'] ?? $this->record->gender,
-            'program_type'   => $this->data['program_type'] ?? $this->record->program_type,
-            'payment_method' => $this->data['payment_method'] ?? $this->record->payment_method,
-            'intake_session' => $this->data['intake_session'] ?? $this->record->intake_session,
-            'status'         => $this->data['status'] ?? $this->record->status,
+
             
-            // 👇 SIFU TUKAR DUA BARIS NI PAKAI empty() 👇
-            'main_sv_id'     => empty($this->data['main_sv_id']) ? null : $this->data['main_sv_id'],
-            'co_sv_id'       => empty($this->data['co_sv_id']) ? null : $this->data['co_sv_id'],
-        ]);
+    $coSvIds = collect($this->data['co_supervisor_ids'] ?? [])
+        ->pluck('lecturer_id')
+        ->filter()
+        ->unique()
+        ->toArray();
+
+    $this->record->coSupervisors()->sync($coSvIds);
+       $this->record->update([
+                'email'                   => $this->data['email'] ?? $this->record->email,
+                'gender'                  => $this->data['gender'] ?? $this->record->gender,
+                'program_type'            => $this->data['program_type'] ?? $this->record->program_type,
+                'payment_method'          => $this->data['payment_method'] ?? $this->record->payment_method,
+                'intake_session'          => $this->data['intake_session'] ?? $this->record->intake_session,
+                'intake_month' => $this->data['intake_month'] ?? $this->record->intake_month,
+                'status'                  => $this->data['status'] ?? $this->record->status,
+                'country'                 => $this->data['country'] ?? $this->record->country,
+                'main_sv_id'              => empty($this->data['main_sv_id']) ? null : $this->data['main_sv_id'],
+                'extended_semesters'      => $this->data['extended_semesters'] ?? 0,
+                'extension_reason'        => $this->data['extension_reason'] ?? null,
+                'extension_status'        => $this->data['extension_status'] ?? 'None',
+                'extension_requested_at'  => isset($this->data['extension_status']) && $this->data['extension_status'] === 'Pending' && !$this->record->extension_requested_at
+                                                ? now()
+                                                : $this->record->extension_requested_at,
+                'extension_approved_at'   => isset($this->data['extension_status']) && $this->data['extension_status'] === 'Approved' && !$this->record->extension_approved_at
+                                                ? now()
+                                                : $this->record->extension_approved_at,
+            ]);
 
         if ($this->record->applicant) {
             $this->record->applicant->update([
@@ -123,6 +149,8 @@ class EditStudent extends EditRecord
                 'gender'         => $this->data['gender'] ?? $this->record->applicant->gender,
                 'email'          => $this->data['email'] ?? $this->record->applicant->email,
                 'intake_session' => $this->data['intake_session'] ?? $this->record->intake_session,
+                'intake_month' => $this->data['intake_month'] ?? $this->record->intake_month,
+                'country' => $this->data['country'] ?? $this->record->applicant->country,
             ]);
         }
     }

@@ -25,10 +25,11 @@ class LecturersTable
                     ->label('Full Name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('main_students_count')
-                    ->counts('mainStudents')
-                    ->label('No. of Students'),
-                TextColumn::make('created_at')
+                TextColumn::make('active_students_count')
+                    ->label('Active Students')
+                    ->sortable()
+                    ->badge(),
+                  TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -53,16 +54,16 @@ class LecturersTable
                         Any co-supervision roles held by this lecturer will also be removed from student records.'
                     ))
                     ->action(function($record) {
-                        $record->mainStudents()->update(['main_sv_id' => null]);
+                        $record->mainStudents->each->update(['main_sv_id' => null]);
 
                         if (method_exists($record, 'coStudents')) {
-                            $record->coStudents()->update(['co_sv_id' => null]);
+                            $record->coStudents->each->update(['co_sv_id' => null]);
                         }
 
                         $record->forceDelete();
 
                         Notification::make()
-                            ->title('Lecturer permanently deleted. Affected students are now unsupervised.')
+                            ->title('Lecturer deleted. Affected students are now unsupervised.')
                             ->warning()
                             ->send();
                     }),
@@ -70,7 +71,24 @@ class LecturersTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->action(fn($records) => $records->each->forceDelete()),
+                        ->requiresConfirmation()
+                        ->modalDescription('Are you sure you want to delete these lecturers? All students supervised by them will automatically become unsupervised. This will be recorded in the Activity Log.')
+                        ->action(function($records) {
+                            $records->each(function ($record) {
+                                $record->mainStudents->each->update(['main_sv_id' => null]);
+                                
+                                if (method_exists($record, 'coStudents')) {
+                                    $record->coStudents->each->update(['co_sv_id' => null]);
+                                }
+                                
+                                $record->forceDelete();
+                            });
+
+                            Notification::make()
+                                ->title('Selected lecturers deleted securely.')
+                                ->success()
+                                ->send();
+                        }),
                 ]),
             ]);
     }

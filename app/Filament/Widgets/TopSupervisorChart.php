@@ -9,22 +9,23 @@ class TopSupervisorChart extends ChartWidget
 {
     protected static ?int $sort = 8;
     protected int | string | array $columnSpan = 2;
-    protected ?string $heading = 'Top 10 Supervisors (All Time)'; 
-    
-    
+    protected ?string $heading = 'Top 10 Supervisors (Current Student Supervision)';
+
     protected function getData(): array
     {
-        $lecturers = Lecturer::withCount('mainStudents')
+        $lecturers = Lecturer::withCount(['mainStudents' => function($query) {
+                $query->where('status', 'Active');
+            }])
             ->orderByDesc('main_students_count')
-            ->limit(10) 
+            ->limit(10)
             ->get();
 
         return [
             'datasets' => [[
-                'label' => 'Total Students Supervised',
+                'label' => 'Current Active Students Supervised',
                 'data' => $lecturers->pluck('main_students_count')->toArray(),
                 'backgroundColor' => '#2A9D8F',
-                'borderRadius' => 6, 
+                'borderRadius' => 6,
             ]],
             'labels' => $lecturers->pluck('full_name')->toArray(),
         ];
@@ -38,8 +39,8 @@ class TopSupervisorChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
-            'maintainAspectRatio' => false, 
-            'indexAxis' => 'y', 
+            'maintainAspectRatio' => false,
+            'indexAxis' => 'y',
             'plugins' => [
                 'legend' => ['display' => false],
             ],
@@ -47,7 +48,7 @@ class TopSupervisorChart extends ChartWidget
                 'x' => [
                     'beginAtZero' => true,
                     'ticks' => [
-                        'precision' => 0, 
+                        'precision' => 0,
                     ],
                 ],
             ],

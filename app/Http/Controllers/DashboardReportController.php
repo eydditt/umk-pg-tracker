@@ -21,8 +21,19 @@ class DashboardReportController extends Controller
         $total_lecturers      = Lecturer::count();
         $total_applicants     = Applicant::count();
         $pending_applicants   = Applicant::where('status', 'Pending')->count();
-        $unsupervised         = Student::whereNull('main_sv_id')->count();
-        $pending_english      = StudentProgress::where('eng_test_status', 'Pending')->count();
+
+        // Both scoped to ACTIVE students only — same as dashboard widget
+        $unsupervised = Student::whereNull('main_sv_id')
+                                ->where('status', 'Active')
+                                ->count();
+
+        $pending_english = StudentProgress::where('eng_test_status', 'Pending')
+                                ->whereHas('student', fn($q) => $q->where('status', 'Active'))
+                                ->count();
+
+        // Percentages computed here — denominator matches numerator scope
+        $unsupervised_pct    = $active_students > 0 ? round(($unsupervised / $active_students) * 100) : 0;
+        $pending_english_pct = $active_students > 0 ? round(($pending_english / $active_students) * 100) : 0;
 
         $phd_students         = Student::where('program_type', 'PhD')->count();
         $master_students      = Student::where('program_type', 'Master')->count();
@@ -37,23 +48,28 @@ class DashboardReportController extends Controller
         $payment_other        = Student::where('payment_method', 'Other')->count();
         $payment_not_stated   = Student::where('payment_method', 'Not-stated')->orWhereNull('payment_method')->count();
 
-        $passed_english       = StudentProgress::where('eng_test_status', 'Passed')->count();
-        $pre_viva_completed   = StudentProgress::where('pre_viva_status', 'Passed')->count();
-        $viva_completed       = StudentProgress::where('viva_status', 'Passed')->count();
-        $degree_verified      = StudentProgress::whereIn('degree_verification_status', ['Verified', 'Awarded'])->count();
+        $pre_viva_completed = StudentProgress::whereHas('student', function($q) {
+            $q->where('status', 'Active');
+        })->where('pre_viva_status', 'Passed')->count();
+
+        $viva_completed = StudentProgress::whereHas('student', function($q) {
+            $q->where('status', 'Active');
+        })->where('viva_status', 'Passed')->count();
 
         $passed_rm = StudentProgress::whereHas('student', function($q) {
-                $q->where('status', 'Active');
-             })->where('research_method', 'Passed')->count();
+            $q->where('status', 'Active');
+        })->where('research_method', 'Passed')->count();
 
         $passed_pd = StudentProgress::whereHas('student', function($q) {
-                        $q->where('status', 'Active');
-                    })->where('pd_status', 'Passed')->count();
+            $q->where('status', 'Active');
+        })->where('pd_status', 'Passed')->count();
 
-        $top_supervisors = Lecturer::withCount('mainStudents')
-            ->orderByDesc('main_students_count')
-            ->limit(8)
-            ->get();
+        $top_supervisors = Lecturer::withCount(['mainStudents' => function($query) {
+        $query->where('status', 'Active');
+        }])
+        ->orderByDesc('main_students_count')
+        ->limit(8)
+        ->get();
 
         $intake_data = Student::select('intake_session', DB::raw('count(*) as total'))
             ->whereNotNull('intake_session')
@@ -66,12 +82,12 @@ class DashboardReportController extends Controller
         $data = compact(
             'total_students', 'active_students', 'completed_students',
             'deferred_students', 'terminated_students', 'total_lecturers',
-            'total_applicants', 'pending_applicants', 'unsupervised',
-            'pending_english', 'phd_students', 'master_students',
+            'total_applicants', 'pending_applicants', 'unsupervised', 'unsupervised_pct',
+            'pending_english', 'pending_english_pct', 'phd_students', 'master_students',
             'male_students', 'female_students', 'local_students',
             'international_students', 'payment_scholarship', 'payment_self',
             'payment_other', 'payment_not_stated',
-            'passed_rm', 'passed_pd', 'pre_viva_completed', 'viva_completed',  
+            'passed_rm', 'passed_pd', 'pre_viva_completed', 'viva_completed',
             'top_supervisors', 'intake_data', 'generated_at'
         );
 

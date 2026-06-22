@@ -1,7 +1,7 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
 /* ── SIDEBAR ── */
-.fi-sidebar { background-color: #1a3a38 !important; border-right: 1px solid #2A9D8F !important; }
+.fi-sidebar { background-color: #20b2aa !important; border-right: 1px solid #2A9D8F !important; }
 .fi-sidebar * { color: #ffffff !important; }
 .fi-sidebar svg { stroke: #ffffff !important; }
 .fi-sidebar-item-btn { background-color: transparent !important; }
@@ -91,4 +91,26 @@
     background: rgba(255, 255, 255, 0.22) !important;
     border-color: #2A9D8F !important;
     box-shadow: 0 0 0 3px rgba(42,157,143,0.3) !important;
+}
+
+/* ──────────────────────────────────────────
+   LOGIN ERROR — red alert
+────────────────────────────────────────── */
+.fi-simple-main .fi-color-danger,
+.fi-simple-main [class*="text-danger"],
+.fi-simple-main .fi-fo-field-wrp-error-message {
+    color: #ff6b6b !important;
+}
+
+.fi-simple-main .fi-input-wrp-error,
+.fi-simple-main input.fi-input-error,
+.fi-simple-main .fi-fo-field-wrp-error input {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3) !important;
+}
+
+/* Notification error toast on login */
+.fi-simple-layout .fi-no-color,
+.fi-simple-layout [class*="fi-color-custom"] {
+    color: #ffffff !important;
 }

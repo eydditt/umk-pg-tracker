@@ -9,7 +9,7 @@ class ProgressMilestonesChart extends ChartWidget
 {
     protected static ?int $sort = 7;
     protected ?string $heading = 'Progress Milestones Overview (Active-Student)';
-    // ❌ Sifu dah BUANG baris $maxHeight kat sini
+    
     protected int | string | array $columnSpan = 2;
 
     protected function getData(): array
@@ -57,7 +57,7 @@ class ProgressMilestonesChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
-            'maintainAspectRatio' => false, // ✅ SIFU TAMBAH KAT SINI
+            'maintainAspectRatio' => false, 
             'plugins' => [
                 'legend' => [
                     'display' => true,

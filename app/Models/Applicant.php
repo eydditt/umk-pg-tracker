@@ -9,10 +9,10 @@ class Applicant extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = [
+   protected $fillable = [
     'full_name', 'email', 'gender', 'identity_type', 'identity_no',
-    'program_applied', 'intake_session', 'prev_edu', 'eng_test',
-    'status', 'application_docs_links', 'eng_test_taken',
+    'country', 'program_applied', 'intake_session', 'intake_month',
+    'prev_edu', 'eng_test', 'status', 'application_docs_links', 'eng_test_taken',
     ];
 
     protected $casts = [
