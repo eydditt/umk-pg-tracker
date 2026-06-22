@@ -43,7 +43,6 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.5
 
 RUN groupadd --force -g 1000 www \
     && useradd -ms /bin/bash --no-user-group -g 1000 -u 1337 www
@@ -62,6 +61,6 @@ COPY docker/production/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/production/start-container /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/start-container
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["start-container"]
