@@ -46,7 +46,7 @@ RUN apt-get update && apt-get upgrade -y \
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.5
 
 RUN groupadd --force -g 1000 www \
-    && useradd -ms /bin/bash --no-user-group -g 1000 -u 1000 www
+    && useradd -ms /bin/bash --no-user-group -g 1000 -u 1337 www
 
 COPY . /var/www/html
 
