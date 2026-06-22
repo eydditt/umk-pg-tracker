@@ -15,12 +15,12 @@ public function up(): void
     Schema::create('student_progress', function (Blueprint $table) {
         $table->id();
         $table->foreignId('student_id')->unique()->constrained()->cascadeOnDelete();
-        $table->enum('eng_test_status', ['Pending', 'Passed'])->default('Pending');
-        $table->enum('research_method', ['Pending', 'Passed'])->default('Pending');
-        $table->enum('pd_status', ['Pending', 'Passed', 'Minor Correction', 'Major Correction'])
+        $table->string('eng_test_status')->default('Pending');
+        $table->string('research_method')->default('Pending');
+        $table->string('pd_status')
                ->default('Pending');
-        $table->enum('pre_viva_status', ['Pending', 'Passed', 'Failed'])->default('Pending');
-        $table->enum('viva_status', ['Pending', 'Passed', 'Failed'])->default('Pending');
+        $table->string('pre_viva_status')->default('Pending');
+        $table->string('viva_status')->default('Pending');
         $table->json('gdrive_links')->nullable();
         $table->timestamps();
     });

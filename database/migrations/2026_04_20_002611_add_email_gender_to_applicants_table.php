@@ -12,8 +12,8 @@ return new class extends Migration
         public function up(): void
         {
             Schema::table('applicants', function (Blueprint $table) {
-                $table->string('email')->nullable()->after('full_name');
-                $table->enum('gender', ['Male', 'Female'])->nullable()->after('email');
+                $table->string('email')->nullable();
+                $table->string('gender')->nullable();
             });
         }
 

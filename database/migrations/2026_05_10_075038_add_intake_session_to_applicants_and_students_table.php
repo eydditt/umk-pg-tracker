@@ -9,11 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('applicants', function (Blueprint $table) {
-            $table->string('intake_session')->nullable()->after('program_applied');
+            $table->string('intake_session')->nullable();
         });
 
         Schema::table('students', function (Blueprint $table) {
-            $table->string('intake_session')->nullable()->after('program_type');
+            $table->string('intake_session')->nullable();
         });
     }
 

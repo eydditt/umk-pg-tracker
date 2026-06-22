@@ -9,11 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('applicants', function (Blueprint $table) {
-            $table->string('country')->nullable()->after('identity_no');
+            $table->string('country')->nullable();
         });
 
         Schema::table('students', function (Blueprint $table) {
-            $table->string('country')->nullable()->after('nationality_type');
+            $table->string('country')->nullable();
         });
     }
 

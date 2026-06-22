@@ -9,9 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->enum('nationality_type', ['Local', 'International'])
+            $table->string('nationality_type')
                   ->default('Local')
-                  ->after('gender');
+                  ;
         });
     }
 

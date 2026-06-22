@@ -12,8 +12,8 @@ return new class extends Migration
         public function up(): void
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->string('email')->nullable()->after('applicant_id');
-            $table->json('application_docs_links')->nullable()->after('email');
+            $table->string('email')->nullable();
+            $table->json('application_docs_links')->nullable();
         });
     }
 

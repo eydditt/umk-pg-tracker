@@ -16,12 +16,12 @@ public function up(): void
         $table->id();
         $table->foreignId('applicant_id')->constrained()->cascadeOnDelete();
         $table->string('matric_no')->unique();
-        $table->enum('program_type', ['Master', 'PhD']);
-        $table->enum('gender', ['Male', 'Female']);
-        $table->enum('payment_method', ['Scholarship', 'Self-funded', 'Other']);
+        $table->string('program_type');
+        $table->string('gender');
+        $table->string('payment_method');
         $table->foreignId('main_sv_id')->nullable()->constrained('lecturers')->nullOnDelete();
         $table->foreignId('co_sv_id')->nullable()->constrained('lecturers')->nullOnDelete();
-        $table->enum('status', ['Active', 'Completed', 'Terminated', 'Deferred'])
+        $table->string('status')
                ->default('Active');
         $table->timestamps();
     });

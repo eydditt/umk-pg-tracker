@@ -15,12 +15,12 @@ public function up(): void
     Schema::create('applicants', function (Blueprint $table) {
         $table->id();
         $table->string('full_name');
-        $table->enum('identity_type', ['IC', 'Passport']);
+        $table->string('identity_type');
         $table->string('identity_no')->unique();
-        $table->enum('program_applied', ['Master', 'PhD']);
+        $table->string('program_applied');
         $table->text('prev_edu');
         $table->string('eng_test')->nullable();
-        $table->enum('status', ['Pending', 'Approved', 'Rejected'])
+        $table->string('status')
                ->default('Pending');
         $table->json('application_docs_links')->nullable();
         $table->softDeletes(); // Untuk Rejected records

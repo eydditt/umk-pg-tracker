@@ -9,11 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('applicants', function (Blueprint $table) {
-            $table->enum('intake_month', ['September', 'February'])->default('September')->after('intake_session');
+            $table->string('intake_month')->default('September');
         });
 
         Schema::table('students', function (Blueprint $table) {
-            $table->enum('intake_month', ['September', 'February'])->default('September')->after('intake_session');
+            $table->string('intake_month')->default('September');
         });
     }
 
