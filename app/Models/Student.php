@@ -8,13 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = [
-        'applicant_id', 'matric_no', 'email', 'application_docs_links',
-        'program_type', 'intake_session', 'gender', 'nationality_type',
-        'country', 'payment_method', 'main_sv_id' , 'status', 'intake_month' ,
-        'extended_semesters', 'extension_reason', 'extension_status',
-        'extension_requested_at', 'extension_approved_at',
+    'applicant_id', 'matric_no', 'email', 'application_docs_links',
+    'program_type', 'intake_session', 'gender', 'nationality_type',
+    'country', 'payment_method', 'main_sv_id' , 'status', 'intake_month' ,
+    'extended_semesters', 'extension_reason', 'extension_status',
+    'extension_requested_at', 'extension_approved_at', 'semester_override',
     ];
-
     protected $casts = [
         'application_docs_links'  => 'array',
         'extension_requested_at'  => 'datetime',
@@ -71,6 +70,11 @@ class Student extends Model
         {
             if (!$this->intake_session) return null;
             if (in_array($this->status, ['Completed', 'Terminated'])) return null;
+
+            // Manual override
+            if (!is_null($this->semester_override)) {
+                return $this->semester_override;
+            }
 
             $startYear  = (int) explode('/', $this->intake_session)[0];
             $startMonth = $this->intake_month === 'February' ? 2 : 9;
