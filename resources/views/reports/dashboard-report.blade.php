@@ -142,6 +142,7 @@
             'Africa'         => '#E76F51',
             'Europe'         => '#3B82F6',
             'Americas'       => '#F4A261',
+            'Central Asia' => '#06B6D4',
             'Oceania'        => '#10B981',
             'Other'          => '#9CA3AF',
         ];

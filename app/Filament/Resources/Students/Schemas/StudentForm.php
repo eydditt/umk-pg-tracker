@@ -219,6 +219,17 @@ class StudentForm
                     Section::make('📝 Semester Extension Request')
                         ->description('Submit an extension request if the student requires additional semesters beyond the standard limit.')
                         ->schema([
+
+                            \Filament\Forms\Components\TextInput::make('semester_override')
+                            ->label('Semester Override')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(20)
+                            ->nullable()
+                            ->dehydrated(true)
+                            ->hint('Optional — overrides auto-calculation')
+                            ->helperText('Leave blank to use auto-calculated semester'),
+
                             \Filament\Forms\Components\Select::make('extension_status')
                                 ->label('Extension Status')
                                 ->options([

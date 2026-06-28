@@ -46,6 +46,7 @@ class OriginChart extends ChartWidget
             'Europe'         => '#F43F5E', 
             'Americas'       => '#F97316', 
             'Oceania'        => '#EAB308', 
+            'Central Asia' => '#06B6D4',
             'Other'          => '#9CA3AF', 
         ];
 

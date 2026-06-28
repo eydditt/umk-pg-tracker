@@ -12,6 +12,7 @@
         "filament/widgets": "^5.4",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "phpoffice/phpspreadsheet": "^5.8",
         "rinvex/countries": "^9.1"
     },
     "require-dev": {

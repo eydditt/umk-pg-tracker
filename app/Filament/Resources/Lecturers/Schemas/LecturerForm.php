@@ -16,11 +16,20 @@ class LecturerForm
             Section::make('Lecturer Information')->schema([
                 TextInput::make('staff_no')
                     ->label('Staff No')
-                    ->required()
-                    ->unique(ignoreRecord: true),
-                TextInput::make('full_name')
+                    ->unique(ignoreRecord: true)
+                    ->nullable(),
+               TextInput::make('full_name')
                     ->label('Full Name')
                     ->required(),
+                \Filament\Forms\Components\Toggle::make('is_external')
+                    ->label('External Lecturer')
+                    ->default(false)
+                    ->live(),
+                TextInput::make('university')
+                    ->label('University')
+                    ->placeholder('e.g. Universitas Mercu Buana')
+                    ->visible(fn($get) => $get('is_external'))
+                    ->nullable(),
             ])->columns(2),
 
             Section::make('Supervised Students')
@@ -49,10 +58,8 @@ class LecturerForm
                                 return new HtmlString('<span style="color: #6b7280; font-style: italic;">No students assigned to this lecturer yet.</span>');
                             }
                             
-                            // 👇 SIFU KIRA JUMLAH KESELURUHAN PELAJAR DI SINI
                             $totalStudents = $students->count();
 
-                            // 👇 SIFU TAMBAH LENCANA TOTAL & MAGIK SCROLL (max-height & sticky)
                             $html = '
                             <div style="margin-bottom: 12px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                                 <span style="color: #6b7280;">Total All-Time Students: </span> 
